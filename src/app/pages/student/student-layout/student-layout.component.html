@@ -1,0 +1,56 @@
+<!-- Navbar -->
+<app-navbar></app-navbar>
+
+<div class="layout-dashboard">
+  <!-- Botón de Toggle para el Sidebar -->
+  <button
+    class="sidebar-toggle-btn"
+    [class.active]="isSidebarActive"
+    (click)="toggleSideBar()">
+    <span
+      class="navbar-toggler-icon"
+      [ngClass]="{'icon-white': !isSidebarActive, 'icon-black': isSidebarActive}">
+    </span>
+  </button>
+
+  <!-- Sidebar con opciones específicas -->
+  <div class="layout-sidebar" [class.collapsed]="isSidebarActive">
+    <nav>
+      <ul>
+        <li>
+          <a routerLink="catalog" routerLinkActive="active">
+            <i class="fas fa-calendar-alt"></i> Catálogo de Eventos
+          </a>
+        </li>
+        <li>
+          <a routerLink="inscription" routerLinkActive="active">
+            <i class="fas fa-ticket-alt"></i> Mis Inscripciones
+          </a>
+        </li>
+        <li>
+          <a routerLink="favorites" routerLinkActive="active">
+            <i class="fas fa-heart"></i> Eventos Favoritos
+          </a>
+        </li>
+        <li>
+          <a routerLink="calendar" routerLinkActive="active">
+            <i class="fas fa-calendar-check"></i> Mi Calendario
+          </a>
+        </li>
+        <li>
+          <a routerLink="profile" routerLinkActive="active">
+            <i class="fas fa-user"></i> Mi Perfil
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Contenido Principal -->
+  <div class="layout-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<!-- Footer -->
+<app-footer></app-footer>

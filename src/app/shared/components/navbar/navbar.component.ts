@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,5 +10,29 @@ import { RouterLink } from '@angular/router';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  private authService = inject(AuthService);
 
+  isAuthenticated: boolean = false;
+  cartItemsCount: number = 0;
+
+  ngOnInit(): void {
+    this.isAuthenticated = this.authService.isAuthenticated();
+  }
+
+  toggleFilters(): void {
+
+  }
+
+  toggleCart(): void {
+
+  }
+
+  toggleUserMenu(): void {
+    
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.isAuthenticated = false;
+  }
 }

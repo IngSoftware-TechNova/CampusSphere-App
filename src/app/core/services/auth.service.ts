@@ -40,4 +40,13 @@ export class AuthService {
     return this.storageService.getAuthData() !== null;
   }
 
+  getUser(): AuthResponse | null {
+    const authData = this.storageService.getAuthData();
+    return authData ? authData : null;
+  }
+
+  getUserRole(): string | null {
+    const authData = this.storageService.getAuthData();
+    return authData ? authData.role : null;
+  }
 }
