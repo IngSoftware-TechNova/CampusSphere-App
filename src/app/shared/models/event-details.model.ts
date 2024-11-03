@@ -1,0 +1,13 @@
+export interface EventDetails {
+    id: number;
+    name: string;
+    capacity: number;
+    description: string;
+    createdAt: string;
+    updatedAt: string;
+    imagePath: string;
+    categoryName: string;
+    locationName: string;
+    cityName: string;
+    priceValue: number;
+}

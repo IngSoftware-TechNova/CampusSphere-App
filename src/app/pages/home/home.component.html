@@ -1,0 +1,45 @@
+<app-navbar></app-navbar>
+
+<main class="home-container">
+  <section class="recent-events">
+    <h2 class="section-title">Descubre Eventos Emocionantes</h2>
+    
+    <div class="search-container">
+      <mat-form-field class="search-field">
+        <mat-label>Buscar eventos</mat-label>
+        <input matInput type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Nombre del evento o categoría">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="events-grid">
+      @for (event of filteredEvents; track event.id) {
+        <mat-card class="event-card" (click)="openEventDetails(event)">
+          <div class="event-image-container">
+            <img [src]="event.imagePath | apiImg" [alt]="event.name">
+            <div class="event-category-badge">{{ event.categoryName }}</div>
+          </div>
+          <mat-card-content>
+            <h3 class="event-title">{{ event.name }}</h3>
+            <p class="event-location">
+              <mat-icon>location_on</mat-icon>
+              {{ event.locationName }}
+            </p>
+            <p class="event-price" [ngClass]="{'free': event.priceValue === 0}">
+              <mat-icon>{{ event.priceValue === 0 ? 'card_giftcard' : 'attach_money' }}</mat-icon>
+              {{ event.priceValue === 0 ? 'Gratis' : (event.priceValue | currency:'S/.') }}
+            </p>
+          </mat-card-content>
+        </mat-card>
+      }
+      @empty {
+        <div class="no-events">
+          <mat-icon>event_busy</mat-icon>
+          <p>No se encontraron eventos.</p>
+        </div>
+      }
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

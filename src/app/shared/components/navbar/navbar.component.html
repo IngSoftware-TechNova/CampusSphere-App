@@ -9,7 +9,7 @@
       
       <div class="navbar-right">
         @if (!isAuthenticated) {
-          <a routerLink="/events" class="nav-link">Eventos</a>
+          <a routerLink="/home" class="nav-link">Eventos</a>
           <button routerLink="/auth/register" class="btn btn-outline-primary">Registrarse</button>
           <button routerLink="/auth/login" class="btn btn-primary">Iniciar Sesión</button>
         } @else {
@@ -60,7 +60,7 @@
               }
             </button>
 
-            <button class="action-button" (click)="toggleUserMenu()">
+            <button class="action-button" routerLink="profile">
               <img 
                 src="/assets/student-avatar.jpg" 
                 alt="Perfil de usuario" 
