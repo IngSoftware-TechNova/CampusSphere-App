@@ -1,19 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
+import { FooterComponent } from '../../../shared/components/footer/footer.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { EventDetails } from '../../shared/models/event-details.model';
-import { HomeService } from '../../core/services/home.service';
-import { ApiImgPipe } from '../../core/pipes/api-img.pipe';
+import { EventDetailsResponse } from '../../../shared/models/event-details-response.model';
+import { HomeService } from '../../../core/services/home.service';
+import { ApiImgPipe } from '../../../core/pipes/api-img.pipe';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { EventDetailsDialogComponent } from './event-details-dialog.component';
+import { EventInfoPageComponent } from './event-info-page/event-info-page.component';
 
 @Component({
   selector: 'app-home',
@@ -25,8 +25,8 @@ import { EventDetailsDialogComponent } from './event-details-dialog.component';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  recentEvents: EventDetails[] = [];
-  filteredEvents: EventDetails[] = [];
+  recentEvents: EventDetailsResponse[] = [];
+  filteredEvents: EventDetailsResponse[] = [];
   searchQuery: string = '';
 
   private eventService = inject(HomeService);
@@ -50,8 +50,8 @@ export class HomeComponent {
     );
   }
 
-  openEventDetails(event: EventDetails): void {
-    this.dialog.open(EventDetailsDialogComponent, {
+  openEventDetails(event: EventDetailsResponse): void {
+    this.dialog.open(EventInfoPageComponent, {
       data: event,
       width: '500px'
     });

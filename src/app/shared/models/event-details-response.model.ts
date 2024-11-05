@@ -1,4 +1,4 @@
-export interface EventDetails {
+export interface EventDetailsResponse {
     id: number;
     name: string;
     capacity: number;

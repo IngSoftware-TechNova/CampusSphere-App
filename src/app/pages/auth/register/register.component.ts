@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { MediaService } from '../../../core/services/media.service';
 
 @Component({
   selector: 'app-register',
@@ -22,6 +23,7 @@ export class RegisterComponent {
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private authService = inject(AuthService);
+  private mediaService = inject(MediaService);
   
   constructor() {
     this.registerForm = this.fb.group({

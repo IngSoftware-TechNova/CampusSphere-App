@@ -8,8 +8,21 @@
       
       <div class="card-content">
         <div class="profile-info">
-          <div class="avatar-section">
           
+          <div class="avatar-section">
+            <div class="avatar">
+              <img 
+                [src]="profile.profilePicPath | apiImg" [alt]="profile.firstName" 
+                [alt]="profile.firstName + ' ' + profile.lastName"
+                class="avatar-image"
+              >
+            </div>
+            <div class="user-basic-info">
+              <h3 class="user-name">{{ profile.firstName }} {{ profile.lastName }}</h3>
+              <p class="user-career">{{ profile.career }}</p>
+            </div>
+          </div>
+
           <div class="info-grid">
             <div class="info-item">
                 <span class="info-label">Nombre</span>

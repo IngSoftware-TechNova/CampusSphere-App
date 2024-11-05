@@ -5,11 +5,13 @@ import { UserProfileService } from '../../../core/services/user-profile.service'
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MediaService } from '../../../core/services/media.service';
+import { ApiImgPipe } from '../../../core/pipes/api-img.pipe';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ApiImgPipe],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'
 })
@@ -20,6 +22,7 @@ export class UserProfileComponent implements OnInit {
 
   private userProfileService = inject(UserProfileService);
   private authService = inject(AuthService);
+  private mediaService = inject(MediaService);
   private router = inject(Router);
   private SnackBar = inject(MatSnackBar);
 

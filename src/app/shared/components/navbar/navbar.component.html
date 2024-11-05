@@ -62,7 +62,7 @@
 
             <button class="action-button" routerLink="profile">
               <img 
-                src="/assets/student-avatar.jpg" 
+                [src]="profile.profilePicPath | apiImg" [alt]="profile.firstName"
                 alt="Perfil de usuario" 
                 class="user-avatar"
               >
