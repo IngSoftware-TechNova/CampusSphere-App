@@ -1,0 +1,51 @@
+<!-- Navbar -->
+<app-navbar></app-navbar>
+
+<div class="layout-dashboard">
+  <!-- Botón de Toggle para el Sidebar -->
+  <button
+    class="sidebar-toggle-btn"
+    [class.active]="isSidebarActive"
+    (click)="toggleSideBar()">
+    <span
+      class="navbar-toggler-icon"
+      [ngClass]="{'icon-white': !isSidebarActive, 'icon-black': isSidebarActive}">
+    </span>
+  </button>
+
+  <!-- Sidebar con opciones específicas -->
+  <div class="layout-sidebar" [class.collapsed]="isSidebarActive">
+    <nav>
+      <ul>
+        <li>
+          <a routerLink="category" routerLinkActive="active">
+            <i class="fas fa-calendar-alt"></i> Categorias
+          </a>
+        </li>
+        <li>
+          <a routerLink="location" routerLinkActive="active">
+            <i class="fas fa-ticket-alt"></i> Locaciones
+          </a>
+        </li>
+        <li>
+          <a routerLink="price" routerLinkActive="active">
+            <i class="fas fa-heart"></i> Tarifas
+          </a>
+        </li>
+        <li>
+          <a routerLink="calendar" routerLinkActive="active">
+            <i class="fas fa-calendar-check"></i> Calendario Eventos
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Contenido Principal -->
+  <div class="layout-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<!-- Footer -->
+<app-footer></app-footer>

@@ -23,6 +23,13 @@ export class LoginComponent {
   private snackBar = inject(MatSnackBar);
   private authService = inject(AuthService);
 
+  private readonly ADMIN_ROLE = 'ADMIN';
+  private readonly STUDENT_ROLE = 'STUDENT';
+  private readonly ADMIN_ROUTE = '/admin/events/list';
+  private readonly STUDENT_ROUTE = '/student';
+  private readonly DEFAULT_ROUTE = '/home';
+
+
   constructor(){
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -44,14 +51,24 @@ export class LoginComponent {
     this.authService.login(credentials).subscribe({
       next: () => {
         this.showSnackBar('Inicio de sesion exitoso');
-        this.router.navigate(['/student'])
+        this.redirectUserBasedOnRole();
       },
       error: () => {
         this.showSnackBar('Error en el inicio de sesion. Por favor, intenta de nuevo');
       },
     });
+  }
 
-    this.showSnackBar("Inicio de sesion exitoso. Bienvenido estudiante");
+  private redirectUserBasedOnRole(): void {
+    const userRole = this.authService.getUserRole();
+
+    if (userRole === this.STUDENT_ROLE) {
+      this.router.navigate([this.STUDENT_ROUTE]);
+    } else if (userRole === this.ADMIN_ROLE) {
+      this.router.navigate([this.ADMIN_ROUTE]);
+    } else {
+      this.router.navigate([this.DEFAULT_ROUTE]);
+    }
   }
 
   private showSnackBar(message:string): void{
