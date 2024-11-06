@@ -40,6 +40,7 @@ export class EventDetailsComponent implements OnInit{
     private eventService: EventService,
     private homeService: HomeService,
     private authService: AuthService,
+    private router: Router,
     private cartService: CartService,
     private snackBar: MatSnackBar,
     private dialogRef: MatDialogRef<EventDetailsComponent>,
@@ -133,6 +134,9 @@ export class EventDetailsComponent implements OnInit{
         next: () => {
           this.isFavorite = false;
           this.snackBar.open('Evento eliminado de favoritos', 'Cerrar', { duration: 3000 });
+          this.router.navigate(['/student/favorites']).then(() => {
+            window.location.reload();
+          });
         },
         error: (error) => {
           console.error('Error al eliminar de favoritos:', error);
