@@ -1,0 +1,53 @@
+<div class="history-container">
+    <h2 class="history-title">Historial de Inscripciones</h2>
+    @if (inscriptions.length > 0) {
+      <div class="inscription-grid">
+        @for (inscription of inscriptions; track inscription.id) {
+          <div class="inscription-card">
+            <div class="inscription-header">
+              <div class="inscription-date">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                {{ formatDate(inscription.createdAt) }}
+              </div>
+              <span class="payment-status" [ngClass]="getPaymentStatusClass(inscription.inscriptionStatus)">
+                {{ inscription.inscriptionStatus }}
+              </span>
+            </div>
+            <div class="inscription-total">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              Total: {{ inscription.total | currency:'EUR':'symbol':'1.2-2' }}
+            </div>
+            <button class="details-toggle" (click)="toggleDetails(inscription)" [attr.aria-expanded]="inscription.showDetails">
+              {{ inscription.showDetails ? 'Ocultar detalles' : 'Ver detalles' }}
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            @if (inscription.showDetails) {
+              <div class="inscription-items">
+                <h3>Eventos inscritos:</h3>
+                @for (item of inscription.items; track item.eventId) {
+                  <div class="inscription-item">
+                    <div class="event-name">{{ item.nameEvent }}</div>
+                    <div class="event-details">
+                      <span class="event-quantity">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                        {{ item.quantity }}
+                      </span>
+                      <span class="event-price">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        {{ item.price | currency:'EUR':'symbol':'1.2-2' }}
+                      </span>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="no-inscriptions">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <p>No se encontraron inscripciones en el historial.</p>
+      </div>
+    }
+  </div>

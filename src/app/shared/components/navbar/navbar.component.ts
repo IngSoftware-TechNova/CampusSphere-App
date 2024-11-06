@@ -19,13 +19,16 @@ export class NavbarComponent {
   private userProfileService = inject(UserProfileService);
   private router = inject(Router);
   private SnackBar = inject(MatSnackBar);
+  isStudent: boolean = false;
 
   isAuthenticated: boolean = false;
   cartItemsCount: number = 0;
 
   ngOnInit(): void {
     this.isAuthenticated = this.authService.isAuthenticated();
+    this.isStudent = this.authService.getUserRole() === 'STUDENT';
     this.loadUserProfile();
+    
   }
 
   loadUserProfile(): void {
@@ -54,6 +57,9 @@ export class NavbarComponent {
   }
 
   toggleCart(): void {
+    if (this.isStudent) {
+      this.router.navigate(['/student/cart']);
+    }
 
   }
 

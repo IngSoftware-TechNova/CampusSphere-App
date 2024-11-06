@@ -17,7 +17,7 @@ import { EventDetailsComponent } from '../event-details/event-details.component'
   selector: 'app-event-card',
   standalone: true,
   imports: [CommonModule, 
-    MatCardModule, MatIconModule, MatButtonModule, MatDialogModule, FormsModule,
+    MatCardModule, MatIconModule, MatButtonModule, MatDialogModule, FormsModule, EventDetailsComponent,
   ApiImgPipe],
   templateUrl: './event-card.component.html',
   styleUrl: './event-card.component.css'
