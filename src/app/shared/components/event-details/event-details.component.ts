@@ -14,6 +14,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CartService } from '../../../core/services/cart.service';
 import { InscriptionItemCreateUpdateRequest } from '../../models/inscription-create-update.model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { InterestService } from '../../../core/services/interest.service';
+
 
 @Component({
   selector: 'app-event-details',
@@ -34,6 +36,7 @@ export class EventDetailsComponent implements OnInit{
   error: string | null = null;
 
   constructor(
+    private interestService: InterestService,
     private eventService: EventService,
     private homeService: HomeService,
     private authService: AuthService,
@@ -51,11 +54,28 @@ export class EventDetailsComponent implements OnInit{
 
     if (this.data && this.data.eventId) {
       this.loadEventDetails(this.data.eventId);
+      this.loadFavoriteStatus();
     } else {
       this.error = 'No event ID provided';
       this.isLoading = false;
     }
   }
+
+  loadFavoriteStatus(): void {
+    this.isLoading = true;
+    this.interestService.isEventFavorite(this.data.eventId).subscribe({
+      next: (isFavorite) => {
+        this.isFavorite = isFavorite;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error al verificar el estado de favorito:', error);
+        this.isLoading = false;
+        this.snackBar.open('Error al cargar estado de favorito', 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
+
 
   loadEventDetails(eventId: number): void {
     this.isLoading = true;
@@ -107,9 +127,32 @@ export class EventDetailsComponent implements OnInit{
 
   }
 
-  toggleFavorite() {
-    
+  toggleFavorite(): void {
+    if (this.isFavorite) {
+      this.interestService.removeInterest(this.data.eventId).subscribe({
+        next: () => {
+          this.isFavorite = false;
+          this.snackBar.open('Evento eliminado de favoritos', 'Cerrar', { duration: 3000 });
+        },
+        error: (error) => {
+          console.error('Error al eliminar de favoritos:', error);
+          this.snackBar.open('Error al eliminar de favoritos', 'Cerrar', { duration: 3000 });
+        }
+      });
+    } else {
+      this.interestService.addInterest(this.data.eventId).subscribe({
+        next: () => {
+          this.isFavorite = true;
+          this.snackBar.open('Evento agregado a favoritos', 'Cerrar', { duration: 3000 });
+        },
+        error: (error) => {
+          console.error('Error al agregar a favoritos:', error);
+          this.snackBar.open('Error al agregar a favoritos', 'Cerrar', { duration: 3000 });
+        }
+      });
+    }
   }
+
 
   closeDialog(): void {
     this.dialogRef.close();
