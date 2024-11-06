@@ -73,8 +73,10 @@ export class LoginComponent {
 
   private showSnackBar(message:string): void{
     this.snackBar.open(message, 'Close', {
-      duration: 2000,
+      duration: 3,
       verticalPosition: 'top'
     });
   }
+
+  
 }

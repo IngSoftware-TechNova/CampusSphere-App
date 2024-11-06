@@ -16,14 +16,14 @@ import { EventService } from '../../../../core/services/event.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EventCardComponent } from '../../../../shared/components/event-card/event-card.component';
 import { PageableResponse } from '../../../../shared/models/pageable.response.model';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
   imports: [CommonModule, RouterOutlet, NavbarComponent, FooterComponent, 
     EventCardComponent, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogModule, FormsModule,
-  ApiImgPipe],
+  ApiImgPipe,MatPaginatorModule],
   templateUrl: './event-list.component.html',
   styleUrl: './event-list.component.css'
 })
@@ -33,7 +33,7 @@ export class EventListComponent implements OnInit {
   filteredEvents: EventDetailsResponse[] = [];
   filterText: string = '';
   totalElements = 0;
-  pageSize = 10;
+  pageSize = 6;
   pageIndex = 0;
 
   private eventService = inject(EventService);
@@ -45,7 +45,7 @@ export class EventListComponent implements OnInit {
     this.loadEvents();
   }
 
-  loadEvents(pageIndex: number = 0, pageSize: number = 10): void {
+  loadEvents(pageIndex: number = 0, pageSize: number = 6): void {
     this.eventService.paginateEvents(pageIndex, pageSize).subscribe({
       next: (response: PageableResponse<EventDetailsResponse>) => {
         this.events = response.content;
@@ -53,7 +53,7 @@ export class EventListComponent implements OnInit {
         this.filteredEvents = this.events;
       },
       error: (error) => {
-        this.snackBar.open('Error al cargar los eventos', 'Cerrar', { duration: 3000 });
+        this.snackBar.open('Error al cargar los eventos', 'Cerrar', { duration: 3 });
       }
     });
   }
@@ -88,11 +88,11 @@ export class EventListComponent implements OnInit {
     if(confirm('¿Estas seguro que deseas eliminar este evento?')) {
       this.eventService.deleteEvent(eventId).subscribe({
         next: () => {
-          this.snackBar.open('Evento eliminado correctamente', 'Cerrar', { duration: 3000 });
+          this.snackBar.open('Evento eliminado correctamente', 'Cerrar', { duration: 30 });
           this.loadEvents(this.pageIndex, this.pageSize);
         },
         error: (error) => {
-          this.snackBar.open('Error al eliminar el evento', 'Cerrar', { duration: 3000 });
+          this.snackBar.open('Error al eliminar el evento', 'Cerrar', { duration: 30 });
         }
       })
     }

@@ -1,12 +1,12 @@
 <div class="catalog-container">
     <header class="catalog-header">
       <h1 class="catalog-title">Listado de Eventos Universitarios</h1>
-      <p class="catalog-subtitle">DGestiona los eventos más emocionantes de la universidad</p>
+      <p class="catalog-subtitle">Gestiona los eventos más emocionantes de la universidad</p>
     </header>
   
     <div class="search-container">
         <button mat-raised-button color="primary" (click)="createEvent()">
-            Nuevo Libro
+            Nuevo Evento
         </button>
         <div class="search-bar">
             <input type="text" 
@@ -44,5 +44,15 @@
             <p>No se encontraron eventos.</p>
           </div>
         }
+        
     </div>
+    <mat-paginator
+                [length]="totalElements"
+                [pageSize]="pageSize"
+                [pageIndex]="pageIndex"
+                [pageSizeOptions]="[5, 10, 20]"
+                (page)="onPageChange($event)"
+                class="paginator"
+                >
+        </mat-paginator>
   </div>
