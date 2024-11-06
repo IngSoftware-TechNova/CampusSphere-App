@@ -1,11 +1,14 @@
 export interface InscriptionCreateUpdateRequest {
-    //Datos según el DTO
-    eventId: number;
+    studentId: number;
+    total: number;
     items: InscriptionItemCreateUpdateRequest[];
   }
   
   
   export interface InscriptionItemCreateUpdateRequest {
-    //Datos según el DTO
+    eventId: number;
+    nameEvent: String;
+    quantity: number; 
+    price: number;
   }
   

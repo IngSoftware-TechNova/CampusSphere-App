@@ -23,8 +23,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   styleUrl: './event-details.component.css'
 })
 export class EventDetailsComponent implements OnInit{
-  event?: EventDetailsResponse;
-
+  event!: EventDetailsResponse;
+  
   isAuthenticated = false;
   isEnrolled = false;
   isFavorite = false;
@@ -32,6 +32,8 @@ export class EventDetailsComponent implements OnInit{
 
   isLoading = true;
   error: string | null = null;
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   constructor(
     private eventService: EventService,
@@ -78,32 +80,27 @@ export class EventDetailsComponent implements OnInit{
     });
   }
 
-  addToCart(): void {
+  goBackToHome(): void {
+    const routePath = this.isStudent ? '/customer/catalog' : '/home';
+    this.router.navigate([routePath]);
+  }
+
+  enrollInEvent(): void {
     if (!this.isStudent) {
       this.showSnackBar('Debe iniciar sesión como estudiante para agregar al carrito');
       return;
     }
 
     const cartItem: InscriptionItemCreateUpdateRequest = {
-      eventId: this.event?.id,
-      eventName: this.event?.name,
+      eventId: this.event.id, 
+      nameEvent: this.event.name,
       quantity: 1,
-      price: this.event?.priceValue
+      price: this.event.priceValue
     };
 
-    //this.cartService.addToCart(cartItem).subscribe({
-    //  next: () => {
-    //    this.showSnackBar('Evento agregado al carrito');
-    //  },
-    //  error: (error) => {
-    //    console.error('Error adding event to cart:', error);
-    //    this.showSnackBar('Error al agregar el evento al carrito');
-    //  }
-    //});
-  }
-
-  enrollInEvent() {
-    
+    this.cartService.addToCart(cartItem);
+    console.log('Evento agregado al carrito:', cartItem);
+    this.showSnackBar('Evento agregado al carrito');
 
   }
 
