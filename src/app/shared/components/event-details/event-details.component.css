@@ -152,5 +152,8 @@
   
     .event-info {
       width: 60%;
-    }
+    }    
+  }
+  .favorite-button mat-icon {
+    transition: color 0.3s ease;
   }

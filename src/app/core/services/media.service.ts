@@ -24,4 +24,9 @@ export class MediaService {
     const url = `${this.baseURL}/${filename}`;
     return this.http.get(url, {responseType: 'blob' });
   }
+
+  deleteMedia(filename: string): Observable<void> {
+    const url = `${this.baseURL}/${filename}`;
+    return this.http.delete<void>(url);
+  }
 }

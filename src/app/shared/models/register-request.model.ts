@@ -1,5 +1,5 @@
 export interface RegisterRequest{
-    imagePath: string;
+    profilePicPath: string;
     firstName:string;
     lastName:string;
     email:string;

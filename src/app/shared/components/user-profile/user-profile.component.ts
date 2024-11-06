@@ -4,14 +4,16 @@ import { UserProfile } from '../../models/user-profile.model';
 import { UserProfileService } from '../../../core/services/user-profile.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MediaService } from '../../../core/services/media.service';
 import { ApiImgPipe } from '../../../core/pipes/api-img.pipe';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, ApiImgPipe],
+  imports: [CommonModule, ApiImgPipe, MatButtonModule, MatIconModule, MatSnackBarModule],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'
 })
@@ -41,6 +43,7 @@ export class UserProfileComponent implements OnInit {
           this.showSnackBar('Perfil cargado con éxito');
         },
         error: (error) => {
+          console.error('Error loading profile:', error);
           this.showSnackBar('Error al cargar el perfil');
         }
       });
