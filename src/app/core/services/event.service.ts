@@ -6,6 +6,7 @@ import { EventDetailsResponse } from '../../shared/models/event-details-response
 import { PageableResponse } from '../../shared/models/pageable.response.model';
 import { EventCreateUpdateRequest } from '../../shared/models/event-create-update-request.model';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -37,5 +38,7 @@ export class EventService {
 
   deleteEvent(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseURL}/${id}`);
+
   }
+  
 }

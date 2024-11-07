@@ -1,1 +1,24 @@
-<p>favorites works!</p>
+<div class="favorites-container">
+  <header class="favorites-header">
+    <h1>Eventos Favoritos</h1>
+    <p>Estos son los eventos que has marcado como favoritos</p>
+  </header>
+
+  <div class="events-grid" *ngIf="!isLoading && favoriteEvents.length > 0">
+    <app-event-card
+      *ngFor="let event of favoriteEvents"
+      [event]="event"
+      class="event-card"
+    ></app-event-card>
+  </div>
+
+  <div *ngIf="!isLoading && favoriteEvents.length === 0" class="no-events">
+    <mat-icon>favorite_border</mat-icon>
+    <p>No tienes eventos favoritos aún.</p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+    <p>Cargando eventos favoritos...</p>
+  </div>
+</div>

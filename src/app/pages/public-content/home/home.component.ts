@@ -13,14 +13,14 @@ import { ApiImgPipe } from '../../../core/pipes/api-img.pipe';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { EventInfoPageComponent } from './event-info-page/event-info-page.component';
+import { EventCardComponent } from '../../../shared/components/event-card/event-card.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, RouterOutlet, NavbarComponent, FooterComponent, 
     MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogModule, FormsModule,
-  ApiImgPipe],
+  ApiImgPipe, EventCardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -28,17 +28,23 @@ export class HomeComponent {
   recentEvents: EventDetailsResponse[] = [];
   filteredEvents: EventDetailsResponse[] = [];
   searchQuery: string = '';
+  isLoading: boolean = true;
 
   private eventService = inject(HomeService);
   private dialog = inject(MatDialog);
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.eventService.getRecentEvents().subscribe({
       next: (events) => {
         this.recentEvents = events;
         this.filteredEvents = events; //Inicialmente, mostrar todos los eventos
+        this.isLoading = false;
       },
-      error: (error) => console.error('Error al cargar los libres recientes', error)
+      error: (error) => {console.error('Error al cargar los libres recientes', error)
+        this.isLoading = false;
+      }
+      
     });
   }
 
@@ -46,15 +52,10 @@ export class HomeComponent {
     const query = this.searchQuery.toLowerCase();
     this.filteredEvents = this.recentEvents.filter(event =>
       event.name.toLocaleLowerCase().includes(query) ||
-      event.categoryName.toLocaleLowerCase().includes(query)
+      event.categoryName.toLocaleLowerCase().includes(query) ||
+      event.locationName.toLocaleLowerCase().includes(query)
     );
   }
 
-  openEventDetails(event: EventDetailsResponse): void {
-    this.dialog.open(EventInfoPageComponent, {
-      data: event,
-      width: '500px'
-    });
-  }
 
 }

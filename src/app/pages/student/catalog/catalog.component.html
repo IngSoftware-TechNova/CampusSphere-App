@@ -1,1 +1,38 @@
-<p>catalog works!</p>
+<div class="catalog-container">
+    <header class="catalog-header">
+      <h1 class="catalog-title">Catálogo de Eventos Universitarios</h1>
+      <p class="catalog-subtitle">Descubre y participa en los eventos más emocionantes de tu universidad</p>
+    </header>
+  
+    <div class="search-container">
+      <input type="text" 
+             placeholder="Buscar eventos..." 
+             class="search-input"
+             [(ngModel)]="searchQuery"
+             (input)="onSearch()">
+      <button class="search-button" (click)="onSearch()">
+        <i class="search-icon"></i>
+      </button>
+    </div>
+  
+    <div class="events-grid">
+      @if (isLoading) {
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Cargando eventos...</p>
+        </div>
+      } @else if (filteredEvents.length > 0) {
+        @for (event of filteredEvents; track event.id) {
+          <app-event-card 
+            [event]="event"
+            class="event-card"
+          ></app-event-card>
+        }
+      } @else {
+        <div class="no-events">
+          <mat-icon>event_busy</mat-icon>
+          <p>No se encontraron eventos.</p>
+        </div>
+      }
+    </div>
+  </div>

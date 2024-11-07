@@ -5,7 +5,6 @@ import { StorageService } from '../services/storage.service';
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const storageService = inject(StorageService);
   const authData = storageService.getAuthData(); //Obtener los datos de autenticacion
-
   if (authData && authData.token) {
     //Si hay un token de autenticacion, clonar la solicitud y agregar el encabezado de autorizacion
     const authReq = req.clone({
@@ -13,7 +12,6 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
     });
     return next(authReq);
   }
-  
   //Si no hay datos de autenticacion, pasar la solicitud sin modificar
   return next(req);
 };
