@@ -46,14 +46,16 @@
     font-size: 1.25rem;
     font-weight: bold;
     margin-bottom: 0.75rem;
-    
+    color: white;
+
   }
   
   .event-date, .event-location, .event-price {
     display: flex;
     align-items: center;
     font-size: 0.9rem;
-    
+    color: white;
+
     margin-bottom: 0.5rem;
   }
   

@@ -16,23 +16,26 @@ import { EventDetailsComponent } from '../event-details/event-details.component'
 @Component({
   selector: 'app-event-card',
   standalone: true,
-  imports: [CommonModule, 
-    MatCardModule, MatIconModule, MatButtonModule, MatDialogModule, FormsModule, EventDetailsComponent,
-  ApiImgPipe],
+  imports: [CommonModule, RouterOutlet,
+    MatCardModule, MatIconModule, MatButtonModule, MatDialogModule, FormsModule,EventDetailsComponent,  ApiImgPipe],
   templateUrl: './event-card.component.html',
   styleUrl: './event-card.component.css'
 })
 export class EventCardComponent {
   @Input() event!: EventDetailsResponse;
   isStudent: boolean = false;
-
+  isAdmin: boolean = false;
   private authService = inject(AuthService);
   private dialog = inject(MatDialog);
+  router: any;
+
 
   constructor() {}
 
   ngOnInit(): void {
     this.isStudent = this.authService.getUserRole() === 'STUDENT';
+    this.isAdmin = this.authService.getUserRole() === 'ADMIN';
+
   }
 
   openEventDetails(): void {
@@ -43,3 +46,4 @@ export class EventCardComponent {
     });
   }
 }
+
