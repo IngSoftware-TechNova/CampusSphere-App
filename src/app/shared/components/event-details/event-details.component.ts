@@ -42,7 +42,7 @@ export class EventDetailsComponent implements OnInit{
     private eventService: EventService,
     private homeService: HomeService,
     private authService: AuthService,
-    private router: Router,
+    //private router: Router,
     private cartService: CartService,
     private snackBar: MatSnackBar,
     private dialogRef: MatDialogRef<EventDetailsComponent>,
