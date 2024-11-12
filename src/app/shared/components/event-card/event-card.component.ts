@@ -1,49 +1,48 @@
+
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { Router, RouterOutlet } from '@angular/router';
 import { ApiImgPipe } from '../../../core/pipes/api-img.pipe';
 import { AuthService } from '../../../core/services/auth.service';
 import { EventDetailsResponse } from '../../models/event-details-response.model';
 import { EventDetailsComponent } from '../event-details/event-details.component';
+import { InterestService } from '../../../core/services/interest.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-event-card',
   standalone: true,
   imports: [CommonModule, RouterOutlet,
-    MatCardModule, MatIconModule, MatButtonModule, MatDialogModule, FormsModule,EventDetailsComponent,  ApiImgPipe],
+    MatCardModule, MatIconModule, MatButtonModule, FormsModule,EventDetailsComponent,  ApiImgPipe],
   templateUrl: './event-card.component.html',
   styleUrl: './event-card.component.css'
 })
-export class EventCardComponent {
+export class EventCardComponent implements OnInit{
   @Input() event!: EventDetailsResponse;
   isStudent: boolean = false;
   isAdmin: boolean = false;
+  isFavorite: boolean = false;
+
   private authService = inject(AuthService);
-  private dialog = inject(MatDialog);
-  router: any;
-
-
+  private interestService= inject(InterestService);
+  private router = inject(Router);
+  private snackBar= inject(MatSnackBar);
+ 
   constructor() {}
 
   ngOnInit(): void {
     this.isStudent = this.authService.getUserRole() === 'STUDENT';
     this.isAdmin = this.authService.getUserRole() === 'ADMIN';
-
   }
 
-  openEventDetails(): void {
-    this.dialog.open(EventDetailsComponent, {
-      data: { eventId: this.event.id },
-      width: '600px',
-      maxHeight: '90vh'
-    });
+  openEventDetails() {
+    const routePath = this.isStudent
+      ? '/student/catalog/details'
+      : '/home/event-details';
+    this.router.navigate([routePath, this.event.id]);
   }
 }
-

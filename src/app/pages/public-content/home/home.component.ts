@@ -31,7 +31,6 @@ export class HomeComponent {
   isLoading: boolean = true;
 
   private eventService = inject(HomeService);
-  private dialog = inject(MatDialog);
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -53,7 +52,8 @@ export class HomeComponent {
     this.filteredEvents = this.recentEvents.filter(event =>
       event.name.toLocaleLowerCase().includes(query) ||
       event.categoryName.toLocaleLowerCase().includes(query) ||
-      event.locationName.toLocaleLowerCase().includes(query)
+      event.locationName.toLocaleLowerCase().includes(query) ||
+      event.cityName.toLocaleLowerCase().includes(query)
     );
   }
 

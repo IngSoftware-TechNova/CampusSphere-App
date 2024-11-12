@@ -9,5 +9,6 @@ export interface EventDetailsResponse {
     categoryName: string;
     locationName: string;
     cityName: string;
+    countryName: String;
     priceValue: number;
 }

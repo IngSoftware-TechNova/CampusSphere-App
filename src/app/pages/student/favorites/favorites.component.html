@@ -1,24 +1,34 @@
 <div class="favorites-container">
   <header class="favorites-header">
-    <h1>Eventos Favoritos</h1>
-    <p>Estos son los eventos que has marcado como favoritos</p>
+    <h1 class="favorites-title">
+      <mat-icon>favorite</mat-icon>
+      Eventos Favoritos
+    </h1>
+    <p class="favorites-subtitle">Descubre y gestiona tus eventos preferidos</p>
   </header>
 
-  <div class="events-grid" *ngIf="!isLoading && favoriteEvents.length > 0">
-    <app-event-card
-      *ngFor="let event of favoriteEvents"
-      [event]="event"
-      class="event-card"
-    ></app-event-card>
-  </div>
-
-  <div *ngIf="!isLoading && favoriteEvents.length === 0" class="no-events">
-    <mat-icon>favorite_border</mat-icon>
-    <p>No tienes eventos favoritos aún.</p>
-  </div>
-
-  <div *ngIf="isLoading" class="loading-spinner">
-    <mat-spinner></mat-spinner>
-    <p>Cargando eventos favoritos...</p>
-  </div>
+  @if (isLoading) {
+    <div class="loading-container">
+      <mat-spinner color="accent"></mat-spinner>
+      <p>Cargando tus eventos favoritos...</p>
+    </div>
+  } @else if (favoriteEvents.length > 0) {
+    <div class="events-grid">
+      @for (event of favoriteEvents; track event.id) {
+        <app-event-card
+          [event]="event"
+          class="event-card"
+        ></app-event-card>
+      }
+    </div>
+  } @else {
+    <div class="no-events">
+      <mat-icon>sentiment_dissatisfied</mat-icon>
+      <h2>¡Aún no tienes eventos favoritos!</h2>
+      <p>Explora nuestro catálogo y marca los eventos que más te interesen.</p>
+      <button mat-raised-button color="primary" routerLink="/student/catalog">
+        Explorar Eventos
+      </button>
+    </div>
+  }
 </div>

@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Inject, Input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { ApiImgPipe } from '../../../core/pipes/api-img.pipe';
 import { EventDetailsResponse } from '../../models/event-details-response.model';
 import { MatCardModule } from '@angular/material/card';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { EventService } from '../../../core/services/event.service';
 import { HomeService } from '../../../core/services/home.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -15,48 +14,62 @@ import { CartService } from '../../../core/services/cart.service';
 import { InscriptionItemCreateUpdateRequest } from '../../models/inscription-create-update.model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { InterestService } from '../../../core/services/interest.service';
-
+import { Location } from '@angular/common';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatChipsModule} from '@angular/material/chips';
+import { forkJoin } from 'rxjs';
+import { InscriptionService } from '../../../core/services/inscription.service';
+import { CalendarService } from '../../../core/services/calendar.service';
+import { EventItem, UserEventProgrammingDTO } from '../../models/user-event-programming-response.model';
+import { InscriptionResponse, InscriptionStatus } from '../../models/inscription-response.model';
 
 @Component({
   selector: 'app-event-details',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule, MatCardModule, MatSnackBarModule, MatProgressSpinnerModule,ApiImgPipe],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
+    MatChipsModule,
+    MatDividerModule,
+    ApiImgPipe],
   templateUrl: './event-details.component.html',
   styleUrl: './event-details.component.css'
 })
-export class EventDetailsComponent implements OnInit{
-  event!: EventDetailsResponse;
-  
+export class EventDetailsComponent implements OnInit {
+  @Input() eventId!: number;
+  event: EventDetailsResponse | null = null;
   isAuthenticated = false;
   isEnrolled = false;
   isFavorite = false;
-  isStudent: boolean = false;
-
+  isStudent = false;
   isLoading = true;
   error: string | null = null;
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
+  enrollmentStatus: 'not-enrolled' | 'processing' | 'pending-payment' | 'pending-confirmation' | 'enrolled' = 'not-enrolled';
+  eventSchedule: EventItem[] | null = null;
 
   constructor(
-    private interestService: InterestService,
     private eventService: EventService,
-    private homeService: HomeService,
+    private inscriptionService: InscriptionService,
+    private calendarService: CalendarService,
     private authService: AuthService,
-    //private router: Router,
+    private interestService: InterestService,
     private cartService: CartService,
     private snackBar: MatSnackBar,
-    private dialogRef: MatDialogRef<EventDetailsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { eventId: number }
+    private location: Location
   ) {}
 
   ngOnInit(): void {
-    console.log('Dialog data:', this.data); // Log the received data
     this.isAuthenticated = this.authService.isAuthenticated();
     this.isStudent = this.authService.getUserRole() === 'STUDENT';
     
-
-    if (this.data && this.data.eventId) {
-      this.loadEventDetails(this.data.eventId);
+    if (this.eventId) {
+      this.loadEventDetails();
+      this.checkEnrollmentStatus();
       this.loadFavoriteStatus();
     } else {
       this.error = 'No event ID provided';
@@ -64,36 +77,17 @@ export class EventDetailsComponent implements OnInit{
     }
   }
 
-  loadFavoriteStatus(): void {
-    this.isLoading = true;
-    this.interestService.isEventFavorite(this.data.eventId).subscribe({
-      next: (isFavorite) => {
-        this.isFavorite = isFavorite;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error al verificar el estado de favorito:', error);
-        this.isLoading = false;
-        this.snackBar.open('Error al cargar estado de favorito', 'Cerrar', { duration: 3000 });
-      }
-    });
-  }
-
-
-  loadEventDetails(eventId: number): void {
+  loadEventDetails(): void {
     this.isLoading = true;
     this.error = null;
-    console.log('Loading event details for ID:', eventId); // Log the event ID being loaded
-    this.homeService.getEventDetailsById(eventId).subscribe({
+    this.eventService.getEventDetailsById(this.eventId).subscribe({
       next: (data) => {
-        console.log('Received event data:', data); // Log the received event data
-        this.event = data,
-        this.checkEnrollmentStatus();
-        this.checkFavoriteStatus();
+        this.event = data;
         this.isLoading = false;
+        console.log('Event details loaded:', this.event);
       },
       error: (err) => {
-        console.error('Error loading event details:', err); // Log any errors
+        console.error('Error loading event details:', err);
         this.error = 'Error al cargar detalles del evento';
         this.isLoading = false;
         this.showSnackBar('Error al cargar detalles del evento');
@@ -101,76 +95,153 @@ export class EventDetailsComponent implements OnInit{
     });
   }
 
-  goBackToHome(): void {
-    const routePath = this.isStudent ? '/customer/catalog' : '/home';
-    this.router.navigate([routePath]);
+  checkEnrollmentStatus(): void {
+    console.log('Checking enrollment status...');
+    forkJoin({
+      inscriptions: this.inscriptionService.getInscriptionHistory(),
+      calendarEvents: this.calendarService.getUserEvents()
+    }).subscribe({
+      next: ({ inscriptions, calendarEvents }) => {
+        console.log('Inscriptions:', inscriptions);
+        console.log('Calendar events:', calendarEvents);
+        this.processInscriptions(inscriptions);
+        this.processCalendarEvents(calendarEvents);
+      },
+      error: (error) => {
+        console.error('Error checking enrollment status:', error);
+        this.showSnackBar('Error al verificar el estado de inscripción');
+      }
+    });
+  }
+
+  private processInscriptions(inscriptions: InscriptionResponse[]): void {
+    console.log('Processing inscriptions...');
+    for (const inscription of inscriptions) {
+      console.log('Checking inscription:', inscription);
+      const eventItem = inscription.items.find(item => item.eventId === this.eventId);
+      if (eventItem) {
+        console.log('Event found in inscription:', eventItem);
+        this.isEnrolled = true;
+        this.updateEnrollmentStatus(inscription.inscriptionStatus, eventItem.price > 0);
+        return;
+      }
+    }
+    console.log('Event not found in inscriptions');
+  }
+
+  private processCalendarEvents(calendarEvents: UserEventProgrammingDTO[]): void {
+    console.log('Processing calendar events...');
+    const eventInCalendar = calendarEvents.find(event => 
+      event.items.some(item => item.eventId === this.eventId.toString())
+    );
+
+    if (eventInCalendar) {
+      console.log('Event found in calendar:', eventInCalendar);
+      this.isEnrolled = true;
+      this.enrollmentStatus = 'enrolled';
+      this.eventSchedule = eventInCalendar.items.filter(item => item.eventId === this.eventId.toString());
+    } else if (!this.isEnrolled) {
+      console.log('Event not found in calendar and not enrolled');
+      this.updateEnrollmentStatus();
+    }
+  }
+
+  loadFavoriteStatus(): void {
+    this.interestService.isEventFavorite(this.eventId).subscribe({
+      next: (isFavorite) => {
+        this.isFavorite = isFavorite;
+        console.log('Favorite status:', this.isFavorite);
+      },
+      error: (error) => {
+        console.error('Error checking favorite status:', error);
+        this.showSnackBar('Error al verificar estado de favorito');
+      }
+    });
   }
 
   enrollInEvent(): void {
-    if (!this.isStudent) {
-      this.showSnackBar('Debe iniciar sesión como estudiante para agregar al carrito');
+    if (!this.isStudent || this.isEnrolled) {
       return;
     }
 
+    this.enrollmentStatus = 'processing';
     const cartItem: InscriptionItemCreateUpdateRequest = {
-      eventId: this.event.id, 
-      nameEvent: this.event.name,
+      eventId: this.eventId,
+      nameEvent: this.event?.name || '',
       quantity: 1,
-      price: this.event.priceValue
+      price: this.event?.priceValue || 0
     };
 
     this.cartService.addToCart(cartItem);
-    console.log('Evento agregado al carrito:', cartItem);
+    this.updateEnrollmentStatus();
     this.showSnackBar('Evento agregado al carrito');
-
   }
 
   toggleFavorite(): void {
-    if (this.isFavorite) {
-      this.interestService.removeInterest(this.data.eventId).subscribe({
-        next: () => {
-          this.isFavorite = false;
-          this.snackBar.open('Evento eliminado de favoritos', 'Cerrar', { duration: 3000 });
-          this.router.navigate(['/student/favorites']).then(() => {
-            window.location.reload();
-          });
-        },
-        error: (error) => {
-          console.error('Error al eliminar de favoritos:', error);
-          this.snackBar.open('Error al eliminar de favoritos', 'Cerrar', { duration: 3000 });
-        }
-      });
-    } else {
-      this.interestService.addInterest(this.data.eventId).subscribe({
-        next: () => {
-          this.isFavorite = true;
-          this.snackBar.open('Evento agregado a favoritos', 'Cerrar', { duration: 3000 });
-        },
-        error: (error) => {
-          console.error('Error al agregar a favoritos:', error);
-          this.snackBar.open('Error al agregar a favoritos', 'Cerrar', { duration: 3000 });
-        }
-      });
+    const action = this.isFavorite ? this.interestService.removeInterest(this.eventId) : this.interestService.addInterest(this.eventId);
+    
+    action.subscribe({
+      next: () => {
+        this.isFavorite = !this.isFavorite;
+        this.showSnackBar(this.isFavorite ? 'Evento agregado a favoritos' : 'Evento eliminado de favoritos');
+      },
+      error: (error) => {
+        console.error('Error toggling favorite:', error);
+        this.showSnackBar('Error al actualizar favoritos');
+      }
+    });
+  }
+
+  getEnrollButtonIcon(): string {
+    switch (this.enrollmentStatus) {
+      case 'processing': return 'hourglass_empty';
+      case 'pending-payment': return 'payment';
+      case 'pending-confirmation': return 'schedule';
+      case 'enrolled': return 'check_circle';
+      default: return 'how_to_reg';
     }
   }
 
-
-  closeDialog(): void {
-    this.dialogRef.close();
+  getEnrollButtonText(): string {
+    switch (this.enrollmentStatus) {
+      case 'processing': return 'Procesando...';
+      case 'pending-payment': return 'Pago pendiente';
+      case 'pending-confirmation': return 'Confirmación pendiente';
+      case 'enrolled': return 'Inscrito';
+      default: return 'Inscribirse';
+    }
   }
 
-  private checkEnrollmentStatus(): void {
-    // Implement logic to check if the user is enrolled in this event
+  goBackToHome(): void {
+    this.location.back();
   }
 
-  private checkFavoriteStatus(): void {
-    // Implement logic to check if the event is in user's favorites
+  private updateEnrollmentStatus(inscriptionStatus?: InscriptionStatus, isPaidEvent: boolean = false): void {
+    console.log('Updating enrollment status:', inscriptionStatus, 'isPaidEvent:', isPaidEvent);
+    if (this.isEnrolled) {
+      switch (inscriptionStatus) {
+        case InscriptionStatus.PAID:
+          this.enrollmentStatus = 'enrolled';
+          break;
+        case InscriptionStatus.PENDING:
+          this.enrollmentStatus = isPaidEvent ? 'pending-payment' : 'pending-confirmation';
+          break;
+        default:
+          this.enrollmentStatus = 'enrolled';
+      }
+    } else {
+      const cartItems = this.cartService.getCartItems();
+      const isInCart = cartItems.some(item => item.eventId === this.eventId);
+      if (isInCart) {
+        this.enrollmentStatus = this.event?.priceValue ? 'pending-payment' : 'pending-confirmation';
+      } else {
+        this.enrollmentStatus = 'not-enrolled';
+      }
+    }
+    console.log('Updated enrollment status:', this.enrollmentStatus);
   }
 
   private showSnackBar(message: string): void {
-    this.snackBar.open(message, 'Cerrar', {
-      duration: 3000,
-    });
+    this.snackBar.open(message, 'Cerrar', { duration: 3000 });
   }
-  
 }

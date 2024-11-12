@@ -22,7 +22,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
   selector: 'app-event-list',
   standalone: true,
   imports: [CommonModule, RouterOutlet, NavbarComponent, FooterComponent, 
-    EventCardComponent, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogModule, FormsModule,
+    EventCardComponent, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, FormsModule,
   ApiImgPipe,MatPaginatorModule],
   templateUrl: './event-list.component.html',
   styleUrl: './event-list.component.css'
@@ -37,7 +37,6 @@ export class EventListComponent implements OnInit {
   pageIndex = 0;
 
   private eventService = inject(EventService);
-  private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
@@ -49,8 +48,8 @@ export class EventListComponent implements OnInit {
     this.eventService.paginateEvents(pageIndex, pageSize).subscribe({
       next: (response: PageableResponse<EventDetailsResponse>) => {
         this.events = response.content;
+        this.filteredEvents = response.content;
         this.totalElements = response.totalElements;
-        this.filteredEvents = this.events;
       },
       error: (error) => {
         this.snackBar.open('Error al cargar los eventos', 'Cerrar', { duration: 3 });

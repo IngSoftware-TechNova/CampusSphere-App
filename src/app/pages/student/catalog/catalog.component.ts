@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { EventCardComponent } from '../../../shared/components/event-card/event-card.component';
 import { CommonModule } from '@angular/common';
 import { EventService } from '../../../core/services/event.service';
@@ -17,9 +17,7 @@ import { ApiImgPipe } from '../../../core/pipes/api-img.pipe';
 @Component({
   selector: 'app-catalog',
   standalone: true,
-  imports: [CommonModule, EventCardComponent, RouterOutlet, MatInputModule, MatIconModule, MatButtonModule, 
-    MatDialogModule, FormsModule,
-  ApiImgPipe],
+  imports: [CommonModule, FormsModule, RouterOutlet, EventCardComponent, ApiImgPipe],
   templateUrl: './catalog.component.html',
   styleUrl: './catalog.component.css'
 })
@@ -28,13 +26,21 @@ export class CatalogComponent implements OnInit{
   filteredEvents: EventDetailsResponse[] = [];
   searchQuery: string = '';
   isLoading: boolean = true;
+  showFilters: boolean = false;
+  selectedCategory: string = '';
+  selectedLocation: string = '';
+  selectedCountry: string = '';
+  minPrice: number | null = null;
+  maxPrice: number | null = null;
+  categories: string[] = [];
+  locations: string[] = [];
+  countries: String[] = [];
 
-  constructor(
-    private eventService: EventService,
-    private authService: AuthService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar
-  ) {}
+  private eventService = inject(EventService);
+  private authService = inject(AuthService);
+  private snackBar = inject(MatSnackBar);
+
+  constructor() {}
 
   ngOnInit(): void {
     this.loadEvents();
@@ -46,6 +52,9 @@ export class CatalogComponent implements OnInit{
       next: (events) => {
         this.events = events;
         this.filteredEvents = events;
+        this.categories = [...new Set(events.map(event => event.categoryName))];
+        this.locations = [...new Set(events.map(event => event.locationName))];
+        this.countries = [...new Set(events.map(event => event.countryName))];
         this.isLoading = false;
       },
       error: (error) => {
@@ -56,28 +65,41 @@ export class CatalogComponent implements OnInit{
     });
   }
 
-  openEventDetails(event: EventDetailsResponse): void {
-    const dialogRef = this.dialog.open(EventDetailsComponent, {
-      data: { eventId: event.id, isAuthenticated: this.authService.isAuthenticated() },
-      width: '600px',
-      maxHeight: '90vh'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        // Handle any actions after dialog is closed (e.g., refresh events list)
-        this.loadEvents();
-      }
-    });
+  onSearch(): void {
+    this.applyFilters();
   }
 
-  onSearch(): void {
+  toggleFilters(): void {
+    this.showFilters = !this.showFilters;
+  }
+
+  applyFilters(): void {
     const query = this.searchQuery.toLowerCase();
     this.filteredEvents = this.events.filter(event =>
-      event.name.toLocaleLowerCase().includes(query) ||
-      event.categoryName.toLocaleLowerCase().includes(query) ||
-      event.locationName.toLocaleLowerCase().includes(query)
+      (event.name.toLowerCase().includes(query) ||
+       event.categoryName.toLowerCase().includes(query) ||
+       event.locationName.toLowerCase().includes(query) ||
+       event.cityName.toLowerCase().includes(query)) &&
+      (this.selectedCategory ? event.categoryName === this.selectedCategory : true) &&
+      (this.selectedLocation ?
+        event.locationName === this.selectedLocation : true) &&
+      (this.selectedCountry ?
+        event.countryName === this.selectedCountry : true) &&
+      (this.minPrice !== null ?
+        event.priceValue >= this.minPrice : true) &&
+      (this.maxPrice !== null ?
+        event.priceValue <= this.maxPrice : true)
     );
+  }
+
+  clearFilters(): void {
+    this.selectedCategory = '';
+    this.selectedLocation = '';
+    this.selectedCountry = '';
+    this.minPrice = null;
+    this.maxPrice = null;
+    this.searchQuery = '';
+    this.filteredEvents = this.events;
   }
 
 }

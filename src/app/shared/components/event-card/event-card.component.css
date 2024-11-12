@@ -1,70 +1,129 @@
 .event-card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    overflow: hidden;
-    border-radius: 12px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+
+.event-image-container {
+  position: relative;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  overflow: hidden;
+}
+
+.event-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.event-card:hover .event-image {
+  transform: scale(1.05);
+}
+
+.event-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.5));
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.event-card:hover .event-overlay {
+  opacity: 1;
+}
+
+.favorite-button {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #FF9220;
+}
+
+.event-category {
+  background-color: #FF9220;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.event-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.event-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  color: #333;
+}
+
+.event-location, .event-price {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+.event-location mat-icon, .event-price mat-icon {
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
+  color: #FF9220;
+}
+
+.event-price.free {
+  color: #4caf50;
+}
+
+.event-actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.details-button {
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .event-card {
+    border-radius: 0;
+    box-shadow: none;
+    border-bottom: 1px solid #eee;
   }
-  
+
   .event-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    transform: none;
+    box-shadow: none;
   }
-  
-  .event-image-container {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-  }
-  
-  .event-image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-  
-  .event-card:hover .event-image-container img {
-    transform: scale(1.05);
-  }
-  
-  .event-category-badge {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background-color: rgba(255, 87, 34, 0.9);
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
-  }
-  
-  .event-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 0.75rem;
-    color: white;
 
+  .event-overlay {
+    opacity: 1;
   }
-  
-  .event-date, .event-location, .event-price {
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-    color: white;
-
-    margin-bottom: 0.5rem;
-  }
-  
-  .event-date mat-icon, .event-location mat-icon, .event-price mat-icon {
-    margin-right: 0.5rem;
-    font-size: 1.1rem;
-    color: #ff5722;
-  }
-  
-  .event-price.free {
-    color: #4caf50;
-  }
+}

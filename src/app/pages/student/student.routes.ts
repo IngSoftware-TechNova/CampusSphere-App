@@ -9,6 +9,7 @@ import { UserProfileComponent } from "../../shared/components/user-profile/user-
 import { StudentLayoutComponent } from "./student-layout/student-layout.component";
 import { CartComponent } from "./inscriptions/cart/cart.component";
 import { HistoryComponent } from "./inscriptions/history/history.component";
+import { DetailsComponent } from "./catalog/details/details.component";
 
 export const studentRoutes: Routes = [
     {
@@ -16,6 +17,7 @@ export const studentRoutes: Routes = [
         component: StudentLayoutComponent,
         children: [
             {path: 'catalog', component: CatalogComponent},
+            {path: 'catalog/details/:id', component: DetailsComponent},
             {path: 'cart', component: CartComponent},
             {path: 'favorites', component: FavoritesComponent},
             {path: 'calendar', component: CalendarComponent},
