@@ -8,6 +8,8 @@ import  LocationFormComponent  from './location-managment/location-form/location
 import { LocationListComponent } from './location-managment/location-list/location-list.component';
 import { PriceListComponent } from './price-managment/price-list/price-list.component';
 import  PriceFormComponent  from './price-managment/price-form/price-form.component';
+import { SalesReportComponent } from './reports/sales-report/sales-report.component';
+import { MonthlySalesSummaryComponent } from './reports/monthly-sales-summary/monthly-sales-summary.component';
 
 export const adminRoutes: Routes = [
     {
@@ -28,7 +30,13 @@ export const adminRoutes: Routes = [
 
             {path: 'prices/list', component: PriceListComponent},
             {path: 'prices/new', component: PriceFormComponent},
-            {path: 'prices/edit/:id', component: PriceFormComponent}
+            {path: 'prices/edit/:id', component: PriceFormComponent},
+
+            {
+                path: 'reports/monthly-sales',
+                component: MonthlySalesSummaryComponent,
+            },
+            {path: 'reports/sales', component: SalesReportComponent },
         ]
     }
 ]
