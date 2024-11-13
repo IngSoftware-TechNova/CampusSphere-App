@@ -17,13 +17,26 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { EventCardComponent } from '../../../../shared/components/event-card/event-card.component';
 import { PageableResponse } from '../../../../shared/models/pageable.response.model';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, NavbarComponent, FooterComponent, 
-    EventCardComponent, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, FormsModule,
-  ApiImgPipe,MatPaginatorModule],
+  imports: [
+    CommonModule, 
+    RouterOutlet, 
+    NavbarComponent, 
+    FooterComponent, 
+    EventCardComponent, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatIconModule, 
+    MatButtonModule, 
+    FormsModule,
+    ApiImgPipe,
+    MatPaginatorModule,
+    MatProgressBarModule
+  ],
   templateUrl: './event-list.component.html',
   styleUrl: './event-list.component.css'
 })
@@ -35,6 +48,7 @@ export class EventListComponent implements OnInit {
   totalElements = 0;
   pageSize = 6;
   pageIndex = 0;
+  isLoading = false;
 
   private eventService = inject(EventService);
   private snackBar = inject(MatSnackBar);
@@ -45,14 +59,17 @@ export class EventListComponent implements OnInit {
   }
 
   loadEvents(pageIndex: number = 0, pageSize: number = 6): void {
+    this.isLoading = true;
     this.eventService.paginateEvents(pageIndex, pageSize).subscribe({
       next: (response: PageableResponse<EventDetailsResponse>) => {
         this.events = response.content;
         this.filteredEvents = response.content;
         this.totalElements = response.totalElements;
+        this.isLoading = false;
       },
       error: (error) => {
         this.snackBar.open('Error al cargar los eventos', 'Cerrar', { duration: 3 });
+        this.isLoading = false;
       }
     });
   }

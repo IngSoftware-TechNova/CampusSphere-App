@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,16 +19,14 @@ import { MatListModule } from '@angular/material/list';
     RouterLink,
     RouterLinkActive,
     MatSidenavModule,
-    MatToolbarModule,
-    MatButtonModule,
     MatIconModule,
-    MatListModule,
+    MatButtonModule,
     NavbarComponent,
     FooterComponent
   ],
   templateUrl: './student-layout.component.html',
   styleUrl: './student-layout.component.css',
-  
+  encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('sidebarAnimation', [
       state('closed', style({
@@ -42,29 +40,27 @@ import { MatListModule } from '@angular/material/list';
   ]
 })
 
-export class StudentLayoutComponent implements OnInit{
-  isSidebarOpen = true;
+export class StudentLayoutComponent implements OnInit {
+  @ViewChild('sidenav') sidenav!: MatSidenav;
   isMobile = false;
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.checkScreenSize();
-  }
 
   ngOnInit() {
     this.checkScreenSize();
+    window.addEventListener('resize', this.checkScreenSize.bind(this));
   }
 
   checkScreenSize() {
     this.isMobile = window.innerWidth <= 768;
-    if (this.isMobile) {
-      this.isSidebarOpen = false;
-    } else {
-      this.isSidebarOpen = true;
+    if (this.isMobile && this.sidenav) {
+      this.sidenav.close();
+    } else if (!this.isMobile && this.sidenav) {
+      this.sidenav.open();
     }
   }
 
-  toggleSidebar() {
-    this.isSidebarOpen = !this.isSidebarOpen;
+  closeSidenavOnMobile() {
+    if (this.isMobile) {
+      this.sidenav.close();
+    }
   }
 }

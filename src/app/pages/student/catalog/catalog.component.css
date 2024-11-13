@@ -26,16 +26,18 @@
 
 .search-filter-container {
   display: flex;
-  justify-content: space-between;
+  
   align-items: center;
   margin-bottom: 2rem;
   gap: 1rem;
+  justify-content: center
 }
 
 .search-container {
   flex-grow: 1;
   display: flex;
   max-width: 500px;
+  
 }
 
 .search-input {

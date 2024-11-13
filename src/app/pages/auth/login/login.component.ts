@@ -36,7 +36,7 @@ export class LoginComponent {
   private readonly ADMIN_ROLE = 'ADMIN';
   private readonly STUDENT_ROLE = 'STUDENT';
   private readonly ADMIN_ROUTE = '/admin/events/list';
-  private readonly STUDENT_ROUTE = '/student';
+  private readonly STUDENT_ROUTE = '/student/catalog';
   private readonly DEFAULT_ROUTE = '/home';
 
 
@@ -90,9 +90,9 @@ export class LoginComponent {
 
   }
 
-  private showSnackBar(message:string): void{
-    this.snackBar.open(message, 'Close', {
-      duration: 3,
+  private showSnackBar(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 3000,
       verticalPosition: 'top'
     });
   }

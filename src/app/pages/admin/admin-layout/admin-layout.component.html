@@ -1,51 +1,43 @@
-<!-- Navbar -->
-<app-navbar></app-navbar>
+<div class="layout-container">
+  <app-navbar></app-navbar>
 
-<div class="layout-dashboard">
-  <!-- Botón de Toggle para el Sidebar -->
-  <button
-    class="sidebar-toggle-btn"
-    [class.active]="isSidebarActive"
-    (click)="toggleSideBar()">
-    <span
-      class="navbar-toggler-icon"
-      [ngClass]="{'icon-white': !isSidebarActive, 'icon-black': isSidebarActive}">
-    </span>
-  </button>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav mode="side" [opened]="!isMobile" class="sidebar" [fixedInViewport]="true" [fixedTopGap]="64">
+      <div class="sidebar-header">
+        <h2>Panel de Admin</h2>
+        <button mat-icon-button (click)="sidenav.toggle()" matTooltip="Ocultar menú" class="hide-sidebar-btn">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+      </div>
+      <mat-nav-list>
+        <a mat-list-item routerLink="events/list" routerLinkActive="active">
+          <mat-icon>event</mat-icon>
+          <span>Eventos</span>
+        </a>
+        <a mat-list-item routerLink="categories/list" routerLinkActive="active">
+          <mat-icon>category</mat-icon>
+          <span>Categorías</span>
+        </a>
+        <a mat-list-item routerLink="locations/list" routerLinkActive="active">
+          <mat-icon>place</mat-icon>
+          <span>Locaciones</span>
+        </a>
+        <a mat-list-item routerLink="prices/list" routerLinkActive="active">
+          <mat-icon>attach_money</mat-icon>
+          <span>Tarifas</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
 
-  <!-- Sidebar con opciones específicas -->
-  <div class="layout-sidebar" [class.collapsed]="isSidebarActive">
-    <nav>
-      <ul>
-        <li>
-          <a routerLink="events/list" routerLinkActive="active">
-            <i class="fas fa-calendar-check"></i> Eventos
-          </a>
-        </li>
-        <li>
-          <a routerLink="categories/list" routerLinkActive="active">
-            <i class="fa-solid fa-icons"></i> Categorias
-          </a>
-        </li>
-        <li>
-          <a routerLink="locations/list" routerLinkActive="active">
-            <i class="fa-solid fa-location-dot"></i> Locaciones
-          </a>
-        </li>
-        <li>
-          <a routerLink="prices/list" routerLinkActive="active">
-            <i class="fa-solid fa-hand-holding-dollar"></i> Tarifas
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </div>
+    <mat-sidenav-content>
+      <main class="content">
+        <button mat-fab color="primary" class="toggle-sidebar" (click)="sidenav.toggle()" matTooltip="Mostrar/Ocultar menú">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 
-  <!-- Contenido Principal -->
-  <div class="layout-content">
-    <router-outlet></router-outlet>
-  </div>
+  <app-footer></app-footer>
 </div>
-
-<!-- Footer -->
-<app-footer></app-footer>

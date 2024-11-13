@@ -7,6 +7,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { UserProfile } from '../../models/user-profile.model';
 import { CartService } from '../../../core/services/cart.service';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import {MatMenuModule} from '@angular/material/menu';
 
 interface Notification {
   id: number;
@@ -18,7 +21,15 @@ interface Notification {
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, ApiImgPipe, MatSnackBarModule, RouterLink],
+  imports: [
+    CommonModule,
+    RouterLink,
+    MatSnackBarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    ApiImgPipe
+  ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
@@ -56,21 +67,24 @@ export class NavbarComponent implements OnInit{
       this.userProfileService.getUserProfile(userId).subscribe({
         next: (profile) => {
           this.profile = profile;
-          
         },
         error: (error) => {
           this.showSnackBar('Error al cargar el perfil de usuario');
         }
       });
-    } else {
-    
-      
     }
   }
 
 
   toggleCatalog(): void {
-    this.router.navigate(['/student/catalog']);
+    if(this.isStudent)
+    {
+      this.router.navigate(['/student/catalog']);
+    }
+    if(this.isAdmin)
+    {
+      this.router.navigate(['/admin/events/list'])
+    }
   }
 
   toggleCart(): void {

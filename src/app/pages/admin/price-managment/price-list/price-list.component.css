@@ -1,6 +1,6 @@
 /* Estilo global para el título */
 h2 {
-    color: #f97316; /* Naranja */
+    color: #3f51b5; /* Naranja */
     margin-bottom: 20px;
 }
 
@@ -18,13 +18,13 @@ h2 {
   
 .table-controls button {
     margin-right: 10px;
-    background-color: #f97316;
+    background-color: #3f51b5;
     color: white;
 }
   
 .input-label input{
     background-color: transparent;
-    border: 2px solid #f97316;
+    border: 2px solid #3f51b5;
     margin-left: 10px;
 }
 
@@ -40,7 +40,7 @@ h2 {
 .mat-header-cell,
 .mat-cell {
     border: none;
-    border-bottom: 2px solid #f97316;
+    border-bottom: 2px solid #3f51b5;
     padding: 10px 15px; /* Espaciado interno en celdas */
     text-align: center; /* Centrado del texto */
     color: black;
@@ -48,23 +48,15 @@ h2 {
 }
 
 .mat-header-row {
-    border-bottom: 3px solid #f97316;
+    border-bottom: 3px solid #3f51b5;
 }
   
-.mat-column-price {
+.mat-column-name {
     text-align: left; /* Alinear el texto de la columna 'name' a la izquierda */
     color: black;
     font-weight: 500;
     font-size: medium;
 }
-
-.mat-column-description {
-    text-align: left; /* Alinear el texto de la columna 'name' a la izquierda */
-    color: black;
-    font-weight: 500;
-    font-size: medium;
-}
-
   
 .mat-column-actions {
     text-align: right;
@@ -75,7 +67,7 @@ h2 {
 
 /* Cambiar el color de los botones con clase 'editar-btn' */
 .editar-btn {
-    background-color: #f97316;  /* Color de fondo naranja */
+    background-color: #3f51b5;  /* Color de fondo naranja */
     color: white;               /* Color del texto blanco */
     border-radius: 10px;   
     padding: 5px 30px;
@@ -83,7 +75,7 @@ h2 {
 }
 
 .editar-btn:hover {
-    background-color: #e65c00; /* Color de fondo cuando el botón se pasa por encima */
+    background-color: #1664a4; /* Color de fondo cuando el botón se pasa por encima */
 }
 
 .eliminar-btn {
