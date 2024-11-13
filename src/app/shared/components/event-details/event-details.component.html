@@ -3,54 +3,49 @@
     <div class="event-header-overlay">
       <h1>{{ event.name }}</h1>
       <div class="event-tags">
-        <mat-chip-listbox>
-          <mat-chip color="primary">{{ event.categoryName }}</mat-chip>
-          <mat-chip color="accent">{{ event.priceValue | currency }}</mat-chip>
-        </mat-chip-listbox>
+        <span class="event-tag category">{{ event.categoryName }}</span>
+        <span class="event-tag price">{{ event.priceValue | currency }}</span>
       </div>
     </div>
   </div>
 
   <div class="event-body">
     <div class="event-main-info">
-      <mat-card class="event-meta">
-        <mat-card-content>
-          <div class="meta-item">
-            <mat-icon>location_on</mat-icon>
-            <span>{{ event.locationName }}, {{ event.cityName }}, {{ event.countryName }}</span>
-          </div>
-          <div class="meta-item">
-            <mat-icon>event</mat-icon>
-            <span>{{ event.createdAt | date:'fullDate' }}</span>
-          </div>
-          <div class="meta-item">
-            <mat-icon>group</mat-icon>
-            <span>Capacidad: {{ event.capacity }} personas</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+      <div class="event-meta">
+        <div class="meta-item">
+          <mat-icon>location_on</mat-icon>
+          <span>{{ event.locationName }}, {{ event.cityName }}, {{ event.countryName }}</span>
+        </div>
+        <div class="meta-item">
+          <mat-icon>event</mat-icon>
+          <span>{{ event.createdAt | date:'fullDate' }}</span>
+        </div>
+        <div class="meta-item">
+          <mat-icon>group</mat-icon>
+          <span>Capacidad: {{ event.capacity }} personas</span>
+        </div>
+      </div>
 
-      <mat-card class="event-description">
-        <mat-card-header>
-          <mat-card-title>Acerca del Evento</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>{{ event.description }}</p>
-        </mat-card-content>
-      </mat-card>
+      <div class="event-description">
+        <h2>Acerca del Evento</h2>
+        <p>{{ event.description }}</p>
+      </div>
 
       <div class="event-actions">
         <ng-container *ngIf="isAuthenticated && isStudent; else unauthenticatedActions">
-          <button mat-raised-button color="primary" 
+          <button class="btn-primary" 
                   (click)="enrollInEvent()" 
-                  [disabled]="enrollmentStatus !== 'not-enrolled'"
-                  [class.enrolled]="isEnrolled">
-            <mat-icon>{{ getEnrollButtonIcon() }}</mat-icon>
-            {{ getEnrollButtonText() }}
+                  [disabled]="enrollmentStatus !== 'not-enrolled' || isEnrollLoading">
+            <mat-icon *ngIf="!isEnrollLoading">{{ getEnrollButtonIcon() }}</mat-icon>
+            <mat-spinner *ngIf="isEnrollLoading" diameter="24"></mat-spinner>
+            <span>{{ getEnrollButtonText() }}</span>
           </button>
-          <button mat-raised-button color="accent" (click)="toggleFavorite()">
-            <mat-icon [class.favorite]="isFavorite">favorite</mat-icon>
-            {{ isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos' }}
+          <button class="btn-secondary" 
+                  (click)="toggleFavorite()"
+                  [disabled]="isFavoriteLoading">
+            <mat-icon *ngIf="!isFavoriteLoading" [class.favorite]="isFavorite">favorite</mat-icon>
+            <mat-spinner *ngIf="isFavoriteLoading" diameter="24"></mat-spinner>
+            <span>{{ isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos' }}</span>
           </button>
         </ng-container>
         <ng-template #unauthenticatedActions>
@@ -60,37 +55,29 @@
     </div>
 
     <div class="event-sidebar">
-      <mat-card class="sidebar-card">
-        <mat-card-header>
-          <mat-card-title>Detalles del Evento</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="sidebar-item">
-            <mat-icon>calendar_today</mat-icon>
-            <span>Creado: {{ event.createdAt | date:'shortDate' }}</span>
-          </div>
-          <div class="sidebar-item">
-            <mat-icon>update</mat-icon>
-            <span>Actualizado: {{ event.updatedAt | date:'shortDate' }}</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+      <div class="sidebar-card">
+        <h3>Detalles del Evento</h3>
+        <div class="sidebar-item">
+          <mat-icon>calendar_today</mat-icon>
+          <span>Creado: {{ event.createdAt | date:'shortDate' }}</span>
+        </div>
+        <div class="sidebar-item">
+          <mat-icon>update</mat-icon>
+          <span>Actualizado: {{ event.updatedAt | date:'shortDate' }}</span>
+        </div>
+      </div>
 
-      <mat-card *ngIf="isEnrolled && eventSchedule" class="sidebar-card">
-        <mat-card-header>
-          <mat-card-title>Horario del Evento</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div *ngFor="let item of eventSchedule" class="schedule-item">
-            <div class="schedule-date">{{ item.eventStartDate | date:'shortDate' }}</div>
-            <div class="schedule-time">{{ item.scheduleStart }} - {{ item.scheduleEnd }}</div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+      <div *ngIf="isEnrolled && eventSchedule" class="sidebar-card">
+        <h3>Horario del Evento</h3>
+        <div *ngFor="let item of eventSchedule" class="schedule-item">
+          <div class="schedule-date">{{ item.eventStartDate | date:'shortDate' }}</div>
+          <div class="schedule-time">{{ item.scheduleStart }} - {{ item.scheduleEnd }}</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <button mat-fab class="fab-back" (click)="goBackToHome()">
+  <button class="fab-back" (click)="goBackToHome()">
     <mat-icon>arrow_back</mat-icon>
   </button>
 </div>

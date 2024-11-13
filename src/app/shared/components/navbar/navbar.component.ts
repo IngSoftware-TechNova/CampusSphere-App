@@ -69,8 +69,8 @@ export class NavbarComponent implements OnInit{
   }
 
 
-  toggleFilters(): void {
-
+  toggleCatalog(): void {
+    this.router.navigate(['/student/catalog']);
   }
 
   toggleCart(): void {

@@ -4,13 +4,31 @@ import { NavbarComponent } from '../../../shared/components/navbar/navbar.compon
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-student-layout',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FooterComponent, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    NavbarComponent,
+    FooterComponent
+  ],
   templateUrl: './student-layout.component.html',
   styleUrl: './student-layout.component.css',
+  
   animations: [
     trigger('sidebarAnimation', [
       state('closed', style({

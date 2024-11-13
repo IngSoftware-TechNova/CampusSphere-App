@@ -28,9 +28,7 @@ export class EventCardComponent implements OnInit{
   isFavorite: boolean = false;
 
   private authService = inject(AuthService);
-  private interestService= inject(InterestService);
   private router = inject(Router);
-  private snackBar= inject(MatSnackBar);
  
   constructor() {}
 

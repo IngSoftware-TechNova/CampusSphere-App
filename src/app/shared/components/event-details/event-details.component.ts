@@ -5,9 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { ApiImgPipe } from '../../../core/pipes/api-img.pipe';
 import { EventDetailsResponse } from '../../models/event-details-response.model';
 import { MatCardModule } from '@angular/material/card';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { EventService } from '../../../core/services/event.service';
-import { HomeService } from '../../../core/services/home.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CartService } from '../../../core/services/cart.service';
@@ -48,6 +47,8 @@ export class EventDetailsComponent implements OnInit {
   isFavorite = false;
   isStudent = false;
   isLoading = true;
+  isEnrollLoading = false;
+  isFavoriteLoading = false;
   error: string | null = null;
   enrollmentStatus: 'not-enrolled' | 'processing' | 'pending-payment' | 'pending-confirmation' | 'enrolled' = 'not-enrolled';
   eventSchedule: EventItem[] | null = null;
@@ -84,7 +85,6 @@ export class EventDetailsComponent implements OnInit {
       next: (data) => {
         this.event = data;
         this.isLoading = false;
-        console.log('Event details loaded:', this.event);
       },
       error: (err) => {
         console.error('Error loading event details:', err);
@@ -96,14 +96,11 @@ export class EventDetailsComponent implements OnInit {
   }
 
   checkEnrollmentStatus(): void {
-    console.log('Checking enrollment status...');
     forkJoin({
       inscriptions: this.inscriptionService.getInscriptionHistory(),
       calendarEvents: this.calendarService.getUserEvents()
     }).subscribe({
       next: ({ inscriptions, calendarEvents }) => {
-        console.log('Inscriptions:', inscriptions);
-        console.log('Calendar events:', calendarEvents);
         this.processInscriptions(inscriptions);
         this.processCalendarEvents(calendarEvents);
       },
@@ -115,33 +112,26 @@ export class EventDetailsComponent implements OnInit {
   }
 
   private processInscriptions(inscriptions: InscriptionResponse[]): void {
-    console.log('Processing inscriptions...');
     for (const inscription of inscriptions) {
-      console.log('Checking inscription:', inscription);
       const eventItem = inscription.items.find(item => item.eventId === this.eventId);
       if (eventItem) {
-        console.log('Event found in inscription:', eventItem);
         this.isEnrolled = true;
         this.updateEnrollmentStatus(inscription.inscriptionStatus, eventItem.price > 0);
         return;
       }
     }
-    console.log('Event not found in inscriptions');
   }
 
   private processCalendarEvents(calendarEvents: UserEventProgrammingDTO[]): void {
-    console.log('Processing calendar events...');
     const eventInCalendar = calendarEvents.find(event => 
       event.items.some(item => item.eventId === this.eventId.toString())
     );
 
     if (eventInCalendar) {
-      console.log('Event found in calendar:', eventInCalendar);
       this.isEnrolled = true;
       this.enrollmentStatus = 'enrolled';
       this.eventSchedule = eventInCalendar.items.filter(item => item.eventId === this.eventId.toString());
     } else if (!this.isEnrolled) {
-      console.log('Event not found in calendar and not enrolled');
       this.updateEnrollmentStatus();
     }
   }
@@ -150,7 +140,6 @@ export class EventDetailsComponent implements OnInit {
     this.interestService.isEventFavorite(this.eventId).subscribe({
       next: (isFavorite) => {
         this.isFavorite = isFavorite;
-        console.log('Favorite status:', this.isFavorite);
       },
       error: (error) => {
         console.error('Error checking favorite status:', error);
@@ -164,6 +153,7 @@ export class EventDetailsComponent implements OnInit {
       return;
     }
 
+    this.isEnrollLoading = true;
     this.enrollmentStatus = 'processing';
     const cartItem: InscriptionItemCreateUpdateRequest = {
       eventId: this.eventId,
@@ -172,22 +162,34 @@ export class EventDetailsComponent implements OnInit {
       price: this.event?.priceValue || 0
     };
 
-    this.cartService.addToCart(cartItem);
-    this.updateEnrollmentStatus();
-    this.showSnackBar('Evento agregado al carrito');
+    try {
+      this.cartService.addToCart(cartItem);
+      this.updateEnrollmentStatus();
+      this.showSnackBar('Evento agregado al carrito');
+      window.location.reload();
+    } catch (error) {
+      console.error('Error adding event to cart:', error);
+      this.showSnackBar('Error al agregar el evento al carrito');
+      this.enrollmentStatus = 'not-enrolled';
+    } finally {
+      this.isEnrollLoading = false;
+    }
   }
 
   toggleFavorite(): void {
+    this.isFavoriteLoading = true;
     const action = this.isFavorite ? this.interestService.removeInterest(this.eventId) : this.interestService.addInterest(this.eventId);
     
     action.subscribe({
       next: () => {
         this.isFavorite = !this.isFavorite;
         this.showSnackBar(this.isFavorite ? 'Evento agregado a favoritos' : 'Evento eliminado de favoritos');
+        this.isFavoriteLoading = false;
       },
       error: (error) => {
         console.error('Error toggling favorite:', error);
         this.showSnackBar('Error al actualizar favoritos');
+        this.isFavoriteLoading = false;
       }
     });
   }
@@ -217,7 +219,6 @@ export class EventDetailsComponent implements OnInit {
   }
 
   private updateEnrollmentStatus(inscriptionStatus?: InscriptionStatus, isPaidEvent: boolean = false): void {
-    console.log('Updating enrollment status:', inscriptionStatus, 'isPaidEvent:', isPaidEvent);
     if (this.isEnrolled) {
       switch (inscriptionStatus) {
         case InscriptionStatus.PAID:
@@ -238,7 +239,6 @@ export class EventDetailsComponent implements OnInit {
         this.enrollmentStatus = 'not-enrolled';
       }
     }
-    console.log('Updated enrollment status:', this.enrollmentStatus);
   }
 
   private showSnackBar(message: string): void {
