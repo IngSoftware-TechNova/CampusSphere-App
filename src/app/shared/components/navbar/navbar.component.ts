@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ApiImgPipe } from '../../../core/pipes/api-img.pipe';
@@ -50,6 +50,9 @@ export class NavbarComponent implements OnInit{
   showNotifications: boolean = false;
   notifications: Notification[] = [];
 
+  isMobileMenuOpen: boolean = false;
+  isMobile: boolean = false;
+
   ngOnInit(): void {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.isStudent = this.authService.getUserRole() === 'STUDENT';
@@ -57,6 +60,23 @@ export class NavbarComponent implements OnInit{
     this.loadUserProfile();
     this.updateCartItemsCount();
     this.loadNotifications();
+    this.checkScreenSize();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 768;
+    if (!this.isMobile) {
+      this.isMobileMenuOpen = false;
+    }
+  }
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
   loadUserProfile(): void {

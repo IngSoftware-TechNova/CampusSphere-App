@@ -55,7 +55,8 @@ export default class EventFormComponent implements OnInit {
   categories: Category[] = [];
   locations: Location[] = [];
   prices: Price[] = [];
-  errors: string[] = [];
+  errors: {id: number, message: string}[] = [];
+
   eventId?: number;
 
   form: FormGroup = this.fb.group({
@@ -76,6 +77,10 @@ export default class EventFormComponent implements OnInit {
     this.loadPrices();
   }
 
+  private addError(message: string): void {
+    this.errors.push({id: this.errors.length, message: message});
+  }
+
   private loadCategories(): void {
     this.categoryService.getAllCategories().subscribe({
       next: (categories) => {
@@ -83,7 +88,7 @@ export default class EventFormComponent implements OnInit {
         this.categories = categories;
         if (this.eventId) this.loadEventForEdit();
       },
-      error: () => this.errors.push('Failed to load categories'),
+      error: () => this.addError('Failed to load categories'),
     });
   }
 
@@ -92,7 +97,7 @@ export default class EventFormComponent implements OnInit {
       next: (locations) => {
         this.locations = locations;
       },
-      error: () => this.errors.push('Failed to load locations'),
+      error: () => this.addError('Failed to load locations'),
     });    
   }
 
@@ -101,7 +106,7 @@ export default class EventFormComponent implements OnInit {
       next: (prices) => {
         this.prices = prices;
       },
-      error: () => this.errors.push('Failed to load prices'),
+      error: () => this.addError('Failed to load prices'),
     });
   }
 
@@ -121,7 +126,7 @@ export default class EventFormComponent implements OnInit {
           });
         }
       },
-      error: () => this.errors.push('Failed to load event for edit'),
+      error: () => this.addError('Failed to load event for edit'),
     });
   }
   
@@ -132,7 +137,7 @@ export default class EventFormComponent implements OnInit {
       formData.append('file', file);
       this.mediaService.upload(formData).subscribe({
         next: (response) => this.form.controls[control].setValue(response.path),
-        error: () => this.errors.push('Failed to upload image'),
+        error: () => this.addError('Failed to upload image'),
       });
     }
   }
@@ -153,10 +158,10 @@ export default class EventFormComponent implements OnInit {
 
     request.subscribe({
       next: () => {
-        this.snackBar.open('Event saved successfully', 'Close', { duration: 30 });
-        this.router.navigate(['/admin/events']);
+        this.snackBar.open('Event saved successfully', 'Close', { duration: 3000 });
+        this.router.navigate(['/admin/events/list']);
       },
-      error: () => this.errors.push('Failed to save event'),
+      error: () => this.addError('Failed to save event'),
     });
   }
 

@@ -4,8 +4,8 @@
     @if(errors.length) {
         <div class="alert alert-danger mt-5">
           <ul>
-            @for (error of errors; track error ) {
-            <li>{{ error }}</li>
+            @for (error of errors; track error.id ) {
+            <li>{{ error.message }}</li>
             }
           </ul>
         </div>

@@ -1,17 +1,24 @@
 <nav class="navbar-wrapper" [ngClass]="{'admin-theme': isAdmin}">
   <div class="navbar-container">
     <div class="navbar-content">
-      <a class="navbar-logo" (click)="goToLogo()">
-        <span class="logo-text">Campus</span>
-        <span class="logo-highlight">Sphere</span>
-      </a>
+      <div class="navbar-left">
+        <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+        <a class="navbar-logo" (click)="goToLogo()">
+          <span class="logo-text">Campus</span>
+          <span class="logo-highlight">Sphere</span>
+        </a>
+      </div>
       
-      <div class="navbar-right">
+      <div class="navbar-right" [ngClass]="{'show-mobile': isMobileMenuOpen}">
         @if (!isAuthenticated) {
           <div class="auth-buttons">
             <a routerLink="/home" class="nav-link">Eventos</a>
-            <button routerLink="/auth/register" class="btn btn-outline">Registrarse</button>
-            <button routerLink="/auth/login" class="btn btn-primary">Iniciar Sesión</button>
+            <a routerLink="/auth/register" class="btn btn-outline">Registrarse</a>
+            <a routerLink="/auth/login" class="btn btn-primary">Iniciar Sesión</a>
           </div>
         } @else {
           <div class="navbar-actions">

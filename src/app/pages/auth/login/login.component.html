@@ -1,41 +1,39 @@
 <section class="login-container">
-
-    <div class="login-card">
-
-      <div class="login-image" [ngStyle]="{ 'background-image': 'url(' + (imagePath | apiImg) + ')' }">
-        <div class="login-overlay">
-          <h3 class="login-text">Bienvenido a CampusSphere</h3>
-          <p class="login-description">Inicia sesión para explorar eventos, conectar con otros estudiantes y hacer que tu vida universitaria sea inolvidable.</p>
-        </div>
-      </div>
-
-      <div class="login-form">
-        <h2>Iniciar Sesión</h2>
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-          <mat-form-field class="form-field">
-            <mat-label>Correo Electrónico</mat-label>
-            <input matInput formControlName="email" type="email" placeholder="tu.correo@universidad.edu">
-            <mat-icon matSuffix>email</mat-icon>
-            <mat-error *ngIf="controlHasError('email', 'required')">Este campo es obligatorio</mat-error>
-            <mat-error *ngIf="controlHasError('email', 'email')">Introduce un correo electrónico válido</mat-error>
-          </mat-form-field>
-  
-          <mat-form-field class="form-field">
-            <mat-label>Contraseña</mat-label>
-            <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" placeholder="Ingresa tu contraseña">
-            <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
-              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-            <mat-error *ngIf="controlHasError('password', 'required')">Este campo es obligatorio</mat-error>
-          </mat-form-field>
-  
-          <button class="submit-button" type="submit" [disabled]="loginForm.invalid || isLoading">
-            <span *ngIf="!isLoading">Iniciar Sesión</span>
-            <mat-spinner diameter="24" *ngIf="isLoading"></mat-spinner>
-          </button>
-        </form>
-        
-        <p class="register-link">¿No tienes una cuenta? <a routerLink="/auth/register">Regístrate aquí</a></p>
+  <div class="login-card" [class.mobile-view]="isMobile">
+    <div class="login-image" [ngStyle]="{ 'background-image': 'url(' + (imagePath | apiImg) + ')' }">
+      <div class="login-overlay" [class.mobile-overlay]="isMobile">
+        <h3 class="login-text">Bienvenido a CampusSphere</h3>
+        <p class="login-description">Inicia sesión para explorar eventos, conectar con otros estudiantes y hacer que tu vida universitaria sea inolvidable.</p>
       </div>
     </div>
-  </section>
+
+    <div class="login-form">
+      <h2>Iniciar Sesión</h2>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field class="form-field">
+          <mat-label>Correo Electrónico</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="tu.correo@universidad.edu">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="controlHasError('email', 'required')">Este campo es obligatorio</mat-error>
+          <mat-error *ngIf="controlHasError('email', 'email')">Introduce un correo electrónico válido</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+          <mat-label>Contraseña</mat-label>
+          <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" placeholder="Ingresa tu contraseña">
+          <button mat-icon-button matSuffix (click)="togglePasswordVisibility($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword" type="button">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="controlHasError('password', 'required')">Este campo es obligatorio</mat-error>
+        </mat-form-field>
+
+        <button class="submit-button" type="submit" [disabled]="loginForm.invalid || isLoading">
+          <span *ngIf="!isLoading">Iniciar Sesión</span>
+          <mat-spinner diameter="24" *ngIf="isLoading"></mat-spinner>
+        </button>
+      </form>
+      
+      <p class="register-link">¿No tienes una cuenta? <a routerLink="/auth/register">Regístrate aquí</a></p>
+    </div>
+  </div>
+</section>

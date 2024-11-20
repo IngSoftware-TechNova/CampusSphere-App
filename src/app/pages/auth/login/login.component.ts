@@ -22,11 +22,12 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  imagePath: string = '0ff0d656-7189-48bc-b34c-f6dfcbf88579.png';
+  imagePath: string = '10561631-6313-4dcb-b0a3-dd23b9f53685.png';
 
   loginForm:FormGroup;
   hidePassword = true;
   isLoading = false;
+  isMobile = false;
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
@@ -47,16 +48,26 @@ export class LoginComponent {
     })
   }
 
+  ngOnInit() {
+    this.checkScreenSize();
+    window.addEventListener('resize', this.checkScreenSize.bind(this));
+  }
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 768;
+  }
+
   controlHasError(control:string, error:string){
     return this.loginForm.controls[control].hasError(error);
   }
 
-  togglePasswordVisibility() {
+  togglePasswordVisibility(event: MouseEvent) {
+    event.preventDefault();
     this.hidePassword = !this.hidePassword;
   }
 
   onSubmit(){
-    if(this.loginForm.invalid){
+    if(this.loginForm.invalid || this.isLoading){
       return;
     };
 
@@ -68,8 +79,10 @@ export class LoginComponent {
         this.showSnackBar('Inicio de sesion exitoso');
         this.redirectUserBasedOnRole();
       },
-      error: () => {
+      error: (error) => {
         this.showSnackBar('Error en el inicio de sesion. Por favor, intenta de nuevo');
+        console.error('Login error:', error);
+        this.isLoading = false;
       },
       complete: () => {
         this.isLoading = false;

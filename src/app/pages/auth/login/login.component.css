@@ -143,10 +143,38 @@ h2 {
   }
 
   .login-image {
-    height: 200px;
+    height: auto;
+    min-height: 250px;
+  }
+
+  .login-overlay {
+    padding: 20px;
+  }
+
+  .login-text {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+
+  .login-description {
+    font-size: 1rem;
   }
 
   .login-form {
     padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-text {
+    font-size: 1.5rem;
+  }
+
+  .login-description {
+    font-size: 0.9rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
   }
 }
