@@ -1,0 +1,44 @@
+<div class="layout-container" [class.sidebar-open]="sidenav.opened">
+  <app-navbar></app-navbar>
+
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav mode="over" [opened]="!isMobile" class="sidebar" [fixedInViewport]="true" [fixedTopGap]="0">
+      <button class="close-sidebar" (click)="sidenav.close()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <nav class="sidebar-nav">
+        <a routerLink="catalog" routerLinkActive="active" class="nav-item" (click)="closeSidenavOnMobile()">
+          <mat-icon>view_module</mat-icon>
+          <span>Catálogo de Eventos</span>
+        </a>
+        <a routerLink="/student/inscription/history" routerLinkActive="active" class="nav-item" (click)="closeSidenavOnMobile()">
+          <mat-icon>history</mat-icon>
+          <span>Mis Inscripciones</span>
+        </a>
+        <a routerLink="favorites" routerLinkActive="active" class="nav-item" (click)="closeSidenavOnMobile()">
+          <mat-icon>favorite</mat-icon>
+          <span>Eventos Favoritos</span>
+        </a>
+        <a routerLink="calendar" routerLinkActive="active" class="nav-item" (click)="closeSidenavOnMobile()">
+          <mat-icon>calendar_today</mat-icon>
+          <span>Mi Calendario</span>
+        </a>
+        <a routerLink="profile" routerLinkActive="active" class="nav-item" (click)="closeSidenavOnMobile()">
+          <mat-icon>person</mat-icon>
+          <span>Mi Perfil</span>
+        </a>
+      </nav>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <main class="content">
+        <button class="toggle-sidebar" (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+  <app-footer></app-footer>
+</div>
