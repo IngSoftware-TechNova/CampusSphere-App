@@ -1,261 +1,224 @@
+.landing-page {
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+}
 
-  /* Estilos de la sección principal */
-  .main-section {
-    background-color: #eef0f2;
-    padding: 50px 0;
-    display: flex;
-    justify-content: center;
+.hero {
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+}
+
+.hero-content {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.btn-primary {
+  background-color: #ff9220;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #e07c00;
+}
+
+.btn-secondary {
+  background-color: white;
+  color: #ff9220;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #f0f0f0;
+}
+
+.featured-events, .welcome, .testimonials, .features, .promo {
+  padding: 4rem 2rem;
+}
+
+.featured-events h2, .welcome h2, .testimonials h2, .features h2 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.event-grid, .testimonial-grid, .feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.event-card, .testimonial-card, .feature-card {
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.event-card:hover, .testimonial-card:hover, .feature-card:hover {
+  transform: translateY(-5px);
+}
+
+.event-image {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+}
+
+.event-details, .testimonial-card, .feature-card {
+  padding: 1.5rem;
+}
+
+.welcome {
+  background-color: #f3f4f6;
+  text-align: center;
+}
+
+.welcome-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.testimonial-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.features {
+  background-color: #0d21a1;
+  color: white;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.feature-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  backdrop-filter: blur(10px);
+}
+
+.feature-card h3 {
+  color: white;
+  margin: 1rem 0;
+}
+
+.feature-card p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cta-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.promo {
+  background-size: cover;
+  background-position: center;
+  color: white;
+  text-align: center;
+  position: relative;
+}
+
+.promo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.promo-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.promo-content h2 {
+  font-size: 2.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.promo-content p {
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2rem;
   }
-  
-  .main-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 1200px;
-    width: 100%;
-    padding: 0 20px;
+
+  .hero p {
+    font-size: 1rem;
   }
-  
-  .main-text {
-    max-width: 50%;
+
+  .featured-events, .welcome, .testimonials, .features, .promo {
+    padding: 2rem 1rem;
   }
-  
-  .main-text h1 {
-    font-size: 50px;
-    font-weight: bold;
-    color: #333;
+
+  .event-grid, .testimonial-grid, .feature-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .main-text p {
-    font-size: 20px;
-    margin: 20px 0;
-    color: #666;
-  }
-  
-  .main-image img {
-    max-width: 100%;
-    height: auto;
-  }
-  
-  /* Nueva sección de eventos */
-  .container {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-  
-  }
-  
-  .eventos {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    width: 60%; /* Asegura que la columna de eventos ocupe el 60% */
-  }
-  
-  .evento-card {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .evento-card img {
-    max-width: 100%;
-    border-radius: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .bienvenida {
-    width: 35%; /* Asegura que la columna de bienvenida ocupe el 35% */
-    display: flex;
+
+  .cta-buttons {
     flex-direction: column;
-    justify-content: center;
-    text-align: left;
-    padding: 20px;
   }
-  
-  .bienvenida h1 {
-    font-size: 50px;
-    margin-bottom: 20px;
-  }
-  
-  .bienvenida p {
-    font-size: 30px;
-    margin-bottom: 30px;
-  }
-  
-  .botones {
-    display: flex;
-    gap: 10px;
-  }
-  
-  /* Estilos para la sección de testimonios */
-  .testimonials {
-    padding: 50px 0;
-    background-color: #eef0f2;
-  }
-  
-  .testimonials-header h2 {
-    font-size: 36px;
-    margin-bottom: 10px;
-    color: #333;
-  }
-  
-  .testimonials-header p {
-    font-size: 18px;
-    color: #666;
-    margin-bottom: 30px;
-  }
-  
-  .testimonial-item {
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  
-  .testimonial-item img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 15px;
-  }
-  
-  .testimonial-item h4 {
-    font-size: 22px;
-    margin-top: 10px;
-    color: #333;
-  }
-  
-  .testimonial-item p {
-    font-size: 16px;
-    color: #666;
-    font-style: italic;
-  }
-  
-  /* Estilos de la sección de características */
-  .features-section {
-    background-color: #0d21a1;
-    padding: 50px 0;
-    color: white;
-  
-    /* Flexbox para alinear en una fila */
-    display: flex;
-    justify-content: space-around; /* Distribuye las características de manera uniforme */
-    align-items: center; /* Alinea los elementos verticalmente */
-  
-  }
-  
-  .features-section h2 {
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 40px;
-  }
-  
-  .feature-item {
-    margin-bottom: 30px;
-  
-    text-align: center; /* Para centrar el contenido dentro de cada característica */
-    max-width: 300px; /* Limita el ancho de cada característica */
-  }
-  
-  .feature-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 15px;
-  }
-  
-  .feature-item h3 {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .feature-item p {
-    font-size: 16px;
-    margin-bottom: 0;
-  }
-  
-  .cta-section {
-    margin-top: 30px;
-  }
-  
-  .cta-section p {
-    font-size: 18px;
-    margin-bottom: 15px;
-  }
-  
-  .btn-main {
-    background-color: #ff9220;
-    padding: 10px 20px;
-    border-radius: 5px;
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-    text-decoration: none;
-  }
-  
-  .btn-main:hover {
-    background-color: #ff7500;
-    color: white;
-  }
-  
-  /* Estilos de la sección promocional */
-  .promo-section {
-    background-color: #f3f4f6; /* Fondo suave */
-    text-align: center;
-    padding: 50px 0;
-    position: relative;
-  }
-  
-  .promo-content {
-    max-width: 800px;
-    margin: 0 auto;
-  
-    position: relative;
-    z-index: 1;
-  }
-  
-  .promo-content h2 {
-    font-size: 36px;
-    color: #333;
-    font-weight: bold;
-    margin-bottom: 30px;
-  }
-  
-  .promo-image {
-    position: relative;
-    z-index: 2;
-  }
-  
-  .promo-image img {
-    max-width: 100%;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    z-index: 2;
-  }
-  
-  .btn-registrarse {
-    background-color: #ff9220;
-    padding: 10px 20px;
-    border-radius: 5px;
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-    text-decoration: none;
-    display: inline-block;
-    margin-bottom: 20px;
-  }
-  
-  .btn-registrarse:hover {
-    background-color: #e07c00;
-  }
-  
-  .promo-content p {
-    font-size: 18px;
-    color: #666;
-  }
+}
+
+.feature-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1rem;
+}

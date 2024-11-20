@@ -1,8 +1,8 @@
 <section class="register-container">
-    <div class="register-card">
+    <div class="register-card" [class.mobile-view]="isMobile">
 
       <div class="register-image" [ngStyle]="{ 'background-image': 'url(' + (imagePath | apiImg) + ')' }">
-        <div class="register-overlay">
+        <div class="register-overlay" [class.mobile-overlay]="isMobile">
           <h3 class="register-text">Únete a CampusSphere</h3>
           <p class="register-description">Descubre eventos increíbles, conéctate con otros estudiantes y haz que tu vida universitaria sea inolvidable.</p>
         </div>

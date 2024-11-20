@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -36,7 +36,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class RegisterComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
-  imagePath: string = 'f2491173-6ecc-4762-a124-ec84b91f3e6a.png';
+  imagePath: string = 'add3604e-594b-4aac-bd93-cb549fd67032.png';
 
   registerForm: FormGroup;
   profileImagePreview: string | null = null;
@@ -49,8 +49,19 @@ export class RegisterComponent {
   private authService = inject(AuthService);
   private mediaService = inject(MediaService);
 
+  isMobile: boolean = false;
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkScreenSize();
+  }
+
   ngOnInit() {
-  
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize() {
+    this.isMobile = window.innerWidth <= 768;
   }
   
   constructor() {

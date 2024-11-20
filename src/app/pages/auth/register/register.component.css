@@ -224,7 +224,21 @@ h2 {
   }
 
   .register-image {
-    height: 200px;
+    height: auto;
+    min-height: 250px;
+  }
+
+  .register-overlay {
+    padding: 20px;
+  }
+
+  .register-text {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+
+  .register-description {
+    font-size: 1rem;
   }
 
   .register-form {
@@ -243,5 +257,15 @@ h2 {
   .avatar {
     width: 100px;
     height: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-text {
+    font-size: 1.5rem;
+  }
+
+  .register-description {
+    font-size: 0.9rem;
   }
 }
