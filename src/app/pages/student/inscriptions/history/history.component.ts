@@ -53,6 +53,9 @@ export class HistoryComponent implements OnInit {
     this.inscriptionService.getInscriptionHistory().pipe(
       switchMap((inscriptions: InscriptionResponse[]) => {
         this.inscriptions = inscriptions as ExtendedInscriptionResponse[];
+        if(this.inscriptions.length === 0){
+          return[];
+        }
         const eventRequests = this.inscriptions.flatMap(inscription =>
           inscription.items.map(item =>
             this.eventService.getEventDetailsById(item.eventId).pipe(
@@ -64,9 +67,11 @@ export class HistoryComponent implements OnInit {
       })
     ).subscribe({
       next: (results) => {
-        results.forEach(({ item, eventDetails }) => {
-          (item as ExtendedInscriptionItemResponse).eventDetails = eventDetails;
-        });
+        if(results.length > 0){
+          results.forEach(({ item, eventDetails }) => {
+            (item as ExtendedInscriptionItemResponse).eventDetails = eventDetails;
+          });
+        }
         this.isLoading = false;
       },
       error: (err) => {
